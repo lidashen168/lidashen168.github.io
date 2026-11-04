@@ -85,6 +85,18 @@
       .x-pool { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 32px; padding: 10px 16px; margin: 0;
         font-size: 14px; color: var(--x-dim); }
       .x-pool b { color: var(--x-yel); font-size: 18px; margin-left: 6px; text-shadow: 2px 2px 0 var(--x-red); }
+      .x-launch { background: linear-gradient(180deg,#14102a,#0a0814); border-bottom: 3px solid var(--x-yel); padding: 22px 16px 26px; text-align: center; }
+      .x-launch__in { max-width: 880px; margin: 0 auto; }
+      .x-launch__h { margin: 0 0 6px; font-size: clamp(18px, 3vw, 28px); color: #fff; letter-spacing: .12em; text-shadow: 3px 3px 0 var(--x-red); }
+      .x-launch__num { margin: 0 0 12px; color: var(--x-dim); font-size: clamp(14px, 2vw, 18px); }
+      .x-launch__num b { color: var(--x-yel); font-size: clamp(34px, 7vw, 64px); line-height: 1; text-shadow: 3px 3px 0 var(--x-red), 6px 6px 0 #000; margin-right: 8px; }
+      .x-launch__bar { position: relative; height: clamp(26px, 4vw, 40px); background: #1a0606; border: 3px solid #fff; box-shadow: 0 0 0 3px #000, 5px 5px 0 3px #000; overflow: hidden; }
+      .x-launch__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; min-width: 4px; background: repeating-linear-gradient(45deg, var(--x-yel) 0 14px, #ffb300 14px 28px);
+        transition: width .8s steps(16); box-shadow: inset 0 -35% 0 rgba(0,0,0,.18), inset 0 3px 0 rgba(255,255,255,.5); }
+      .x-launch__pct { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: clamp(14px, 2.2vw, 20px); text-shadow: 2px 2px 0 #000, -1px -1px 0 #000; }
+      .x-launch__sub { margin: 12px 0 0; color: #fff; font-size: clamp(13px, 1.6vw, 16px); }
+      .x-launch__sub b { color: var(--x-yel); }
+      .x-launch.is-done .x-launch__fill { background: #2bd96b; }
       .x-banner { position: absolute; inset: 0; display: grid; place-items: center; z-index: 6; pointer-events: none; text-align: center; }
       .x-banner p { margin: 0; font-size: clamp(28px, 9vw, 120px); color: var(--x-yel); letter-spacing: .08em; line-height: 1;
         text-shadow: 4px 4px 0 var(--x-red), 8px 8px 0 #000; font-style: italic; }
@@ -229,8 +241,17 @@
         </div>
         <div class="x-banner" id="banner" hidden><p id="bannerText"></p></div>
       </section>
-      <p class="x-pool" aria-live="polite"><span><span data-i18n="poolLaunch">Launch progress</span><b id="launchAmt">-</b> <span data-i18n="poolLaunchOf">/ 10,000 shares</span></span><span><span data-i18n="poolReward">Reward pool</span><b id="poolAmt">-</b> <span data-i18n="poolUnit">×10k tokens</span></span><span><span data-i18n="poolReserve">Reserve</span><b id="resAmt">-</b> <span data-i18n="poolUnit">×10k tokens</span></span></p>
+      <p class="x-pool" aria-live="polite"><span><span data-i18n="poolReward">Reward pool</span><b id="poolAmt">-</b> <span data-i18n="poolUnit">×10k tokens</span></span><span><span data-i18n="poolReserve">Reserve</span><b id="resAmt">-</b> <span data-i18n="poolUnit">×10k tokens</span></span></p>
     </div>
+
+    <section class="x-launch" id="launch" aria-live="polite">
+      <div class="x-launch__in">
+        <h2 class="x-launch__h" data-i18n="lpH">LAUNCH PROGRESS</h2>
+        <p class="x-launch__num"><b id="lpNum">-</b><span data-i18n="poolLaunchOf">/ 10,000 shares</span></p>
+        <div class="x-launch__bar" role="progressbar" aria-valuemin="0" aria-valuemax="10000" aria-valuenow="0" id="lpBar"><span class="x-launch__fill" id="lpFill"></span><span class="x-launch__pct" id="lpPct">0%</span></div>
+        <p class="x-launch__sub" id="lpSub">-</p>
+      </div>
+    </section>
 
     <div class="page x-wrap">
       <main>
@@ -407,7 +428,7 @@
             arenaAria: "Arena", stageAlt: "Neon rooftop under a BNB moon",
             barAAria: "Side A share of this round", barBAria: "Side B share of this round",
             cnt0: "0 shares", epoch0: "Round -", connecting: "Connecting", sold0: "This round 0 / 100 trades",
-            poolLaunch: "Launch progress", poolLaunchOf: "/ 10,000 shares", poolReward: "Reward pool", poolUnit: "×10k tokens", poolReserve: "Reserve",
+            poolLaunch: "Launch progress", lpH: "LAUNCH PROGRESS", lpLeft: (n) => `<b>${n}</b> shares to go · the pool opens and the token launches automatically at 10,000`, lpDone: "Launched · the pool is live", poolLaunchOf: "/ 10,000 shares", poolReward: "Reward pool", poolUnit: "×10k tokens", poolReserve: "Reserve",
             howH: "How to play",
             howSub: "5-minute rounds, fast fights, fast draws. At 10,000 total shares (paid + free) the pool is created and the token launches automatically.",
             h01: "Eligibility",
@@ -491,7 +512,7 @@
             arenaAria: "对战场地", stageAlt: "霓虹天台，BNB 月亮高挂",
             barAAria: "A 方占本期份数比例", barBAria: "B 方占本期份数比例",
             cnt0: "0 份", epoch0: "第 - 期", connecting: "连接中", sold0: "本期 0 / 100 笔",
-            poolLaunch: "开盘进度", poolLaunchOf: "/ 10,000 份", poolReward: "奖励池", poolUnit: "万枚", poolReserve: "储备",
+            poolLaunch: "开盘进度", lpH: "开盘进度", lpLeft: (n) => `还差 <b>${n}</b> 份 · 满 10,000 份自动建池开盘`, lpDone: "已开盘 · 池子已上线", poolLaunchOf: "/ 10,000 份", poolReward: "奖励池", poolUnit: "万枚", poolReserve: "储备",
             howH: "怎么打",
             howSub: "5 分钟一局，快打快开。累计 1 万份（付费+免费）自动建池开盘。",
             h01: "入场资格",
@@ -673,10 +694,18 @@
           $("nameA").textContent = NAMES[1]; $("nameB").textContent = NAMES[2];
           $("tabA").textContent = NAMES[1]; $("tabB").textContent = NAMES[2];
         }
+        function renderLaunch(s) {
+          const tot = s.launched ? LAUNCH : Math.min(s.total, LAUNCH), pct = tot / LAUNCH * 100;
+          $("lpNum").textContent = s.launched ? fmt(LAUNCH) : fmt(s.total);
+          $("lpFill").style.width = pct + "%"; $("lpBar").setAttribute("aria-valuenow", tot);
+          $("lpPct").textContent = (pct > 0 && pct < 0.1 ? pct.toFixed(2) : pct.toFixed(1)) + "%";
+          $("lpSub").innerHTML = s.launched ? t("lpDone") : t("lpLeft", fmt(LAUNCH - s.total));
+          $("launch").classList.toggle("is-done", !!s.launched);
+        }
         function applyRound(s) {
           $("epoch").textContent = t("round", s.id + 1);
           $("poolAmt").textContent = wan(s.pool); $("resAmt").textContent = wan(s.reserve);
-          $("launchAmt").textContent = s.launched ? t("launched") : fmt(s.total);
+          renderLaunch(s);
           const key = s.id + ":" + s.fightersSet + ":" + s.f1 + ":" + s.f2;
           if (key === lastKey) return; lastKey = key;
           setNames(s);
