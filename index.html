@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KOF DUEL · 双阵营对决</title>
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="hark-hero.css" />
+    <style>
+      body.x-arcade {
+        --x-bg: #07060d; --x-panel: #120f22; --x-ink: #f4f0ff; --x-dim: #a9a3c7;
+        --x-yel: #ffd400; --x-red: #ff2a2a; --x-pur: #b46bff; --x-line: #3a3360;
+        --x-mono: "Courier New", Courier, monospace;
+        background: var(--x-bg); color: var(--x-ink); font-family: var(--x-mono); font-weight: 700;
+      }
+      .x-arcade * { font-family: var(--x-mono); }
+      .x-crt { position: fixed; inset: 0; pointer-events: none; z-index: 50;
+        background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.28) 2px 3px);
+        box-shadow: inset 0 0 120px rgba(0,0,0,.65); }
+      .x-demo { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 60;
+        background: #b3001b; color: #fff; font-size: 12px; letter-spacing: .12em; padding: 4px 12px;
+        border: 2px solid #fff; box-shadow: 3px 3px 0 #000; white-space: nowrap; }
+      .x-demo[hidden] { display: none; }
+      .x-arena-wrap { background: #000; border-bottom: 3px solid var(--x-yel); }
+      .x-arena { position: relative; overflow: hidden; margin: 0 auto; aspect-ratio: 16 / 9;
+        width: min(100%, calc(80vh * 16 / 9)); }
+      .x-stage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+      .x-moon { position: absolute; left: 50%; top: 21.6%; width: 21.4%; aspect-ratio: 1; transform: translate(-50%, -50%);
+        border-radius: 50%; pointer-events: none; display: grid; place-items: center;
+        background: radial-gradient(circle at 38% 34%, #fff6d6 0 18%, #ffe7a3 45%, #ffd36a 78%, #f6b545 100%);
+        box-shadow: 0 0 2.5vw 0.6vw rgba(255, 196, 80, .55), inset -0.6vw -0.6vw 1.4vw rgba(214, 130, 20, .35); }
+      .x-moon svg { width: 62%; height: auto; filter: drop-shadow(0.25vw 0.25vw 0 #8a4b00); }
+      .x-shake { animation: x-shake .2s steps(4) 1; }
+      @keyframes x-shake { 0%{transform:translate(4px,-3px)} 25%{transform:translate(-5px,2px)} 50%{transform:translate(3px,3px)} 75%{transform:translate(-3px,-2px)} 100%{transform:none} }
+      .x-fighter { position: absolute; bottom: 7%; height: 60%; transition: transform .12s steps(2); }
+      .x-fighter--a { left: 12%; } .x-fighter--b { right: 12%; }
+      .x-fighter img { height: 100%; width: auto; display: block; image-rendering: pixelated;
+        animation: x-bob .6s steps(2) infinite; filter: drop-shadow(0 6px 0 rgba(0,0,0,.45)); }
+      .x-fighter--b img { animation-delay: -.3s; }
+      .x-fighter img[hidden] { display: none; }
+      @keyframes x-bob { 0%{transform:translateY(0)} 100%{transform:translateY(-3%)} }
+      .x-fighter--a.x-lunge { transform: translateX(45%); }
+      .x-fighter--b.x-lunge { transform: translateX(-45%); }
+      .x-fighter.x-hit img { filter: brightness(3) saturate(0); }
+      .x-spark { position: absolute; top: 28%; width: 46%; aspect-ratio: 1; left: 27%; opacity: 0; pointer-events: none;
+        background: radial-gradient(circle, #fff 0 14%, var(--x-yel) 15% 30%, rgba(255,42,42,.9) 31% 42%, transparent 43%);
+        clip-path: polygon(50% 0,60% 38%,100% 30%,66% 55%,90% 100%,50% 70%,10% 100%,34% 55%,0 30%,40% 38%); }
+      .x-fighter.x-hit .x-spark { animation: x-spark .3s steps(3) 1; }
+      @keyframes x-spark { 0%{opacity:1;transform:scale(.4)} 60%{opacity:1;transform:scale(1.15)} 100%{opacity:0;transform:scale(1.3)} }
+      .x-hud { position: absolute; top: 3%; left: 3%; right: 3%; display: grid; grid-template-columns: 1fr auto 1fr;
+        gap: clamp(6px, 1.4vw, 16px); align-items: start; z-index: 5; }
+      .x-side { min-width: 0; }
+      .x-side--b { text-align: right; }
+      .x-name { font-size: clamp(12px, 1.5vw, 16px); color: var(--x-yel); letter-spacing: .06em; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000; margin: 0 0 3px; }
+      .x-bar { position: relative; height: clamp(9px, 2.2vw, 22px); background: #1a0606; border: 2px solid #fff;
+        box-shadow: 0 0 0 2px #000, 3px 3px 0 2px #000; overflow: hidden; }
+      .x-bar span { position: absolute; top: 0; bottom: 0; width: 0; }
+      .x-side--a .x-bar span { right: 0; } .x-side--b .x-bar span { left: 0; }
+      .x-dmg { background: #fff; transition: width .15s linear; }
+      .x-fill { background: var(--x-yel); transition: width .6s steps(12) .35s, background-color .6s .35s;
+        box-shadow: inset 0 -35% 0 rgba(0,0,0,.18), inset 0 2px 0 rgba(255,255,255,.5); }
+      .x-count { font-size: clamp(12px, 1.3vw, 14px); white-space: nowrap; color: #fff; margin: 4px 0 0; text-shadow: 2px 2px 0 #000; }
+      .x-timer { text-align: center; background: rgba(0,0,0,.72); border: 2px solid var(--x-yel); padding: .3em .6em;
+        box-shadow: 3px 3px 0 #000; min-width: 6.5em; }
+      .x-timer__vs { display: block; font-size: clamp(12px, 1.3vw, 14px); color: var(--x-red); letter-spacing: .2em; }
+      .x-timer__fig { display: block; font-size: clamp(13px, 2.6vw, 30px); color: var(--x-yel); line-height: 1.1;
+        text-shadow: 2px 2px 0 var(--x-red); white-space: nowrap; }
+      .x-timer__sub { display: block; font-size: clamp(12px, 1.1vw, 14px); color: #fff; white-space: nowrap; }
+      .x-timer__fig.x-wait { font-size: clamp(12px, 1.5vw, 18px); text-shadow: 1px 1px 0 var(--x-red); }
+      .x-sold { margin: 0; font-size: clamp(12px, 1.3vw, 14px); color: #fff; white-space: nowrap; text-shadow: 2px 2px 0 #000; }
+      .x-mid { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+      .x-epoch { margin: 0; font-size: clamp(12px, 1.1vw, 14px); background: #b3001b; color: #fff; padding: 1px 8px;
+        border: 2px solid #fff; box-shadow: 2px 2px 0 #000; white-space: nowrap; letter-spacing: .08em; }
+      .x-pool { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 32px; padding: 10px 16px; margin: 0;
+        font-size: 14px; color: var(--x-dim); }
+      .x-pool b { color: var(--x-yel); font-size: 18px; margin-left: 6px; text-shadow: 2px 2px 0 var(--x-red); }
+      .x-banner { position: absolute; inset: 0; display: grid; place-items: center; z-index: 6; pointer-events: none; text-align: center; }
+      .x-banner p { margin: 0; font-size: clamp(28px, 9vw, 120px); color: var(--x-yel); letter-spacing: .08em; line-height: 1;
+        text-shadow: 4px 4px 0 var(--x-red), 8px 8px 0 #000; font-style: italic; }
+      .x-banner small { display: block; font-size: .38em; color: #fff; text-shadow: 3px 3px 0 var(--x-red), 5px 5px 0 #000; margin-top: .3em; }
+      .x-banner[hidden] { display: none; }
+      .x-flash { animation: x-flash 1.6s steps(8) 1 forwards; }
+      @keyframes x-flash { 0%{opacity:0;transform:scale(2.2)} 20%{opacity:1;transform:scale(1)} 35%{opacity:.2} 50%{opacity:1} 80%{opacity:1} 100%{opacity:0} }
+      .x-blink { animation: x-blink 1s steps(2) infinite; }
+      @keyframes x-blink { 50% { opacity: .35; } }
+      .x-wrap { max-width: 1080px; margin: 0 auto; padding: 8px 16px 40px; }
+      .x-sec { padding: 40px 0 8px; }
+      .x-sec h2 { margin: 0 0 6px; font-size: clamp(22px, 4vw, 34px); color: var(--x-yel); letter-spacing: .08em;
+        text-shadow: 3px 3px 0 var(--x-red), 5px 5px 0 #000; }
+      .x-sec__sub { margin: 0 0 18px; color: var(--x-dim); font-size: 14px; }
+      .x-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+      .x-panel { background: var(--x-panel); border: 3px solid var(--x-line); box-shadow: 5px 5px 0 #000; padding: 16px;
+        font-size: 14px; line-height: 1.65; font-weight: 400; }
+      .x-panel h3 { margin: 0 0 8px; font-size: 16px; color: #fff; letter-spacing: .04em; font-weight: 700; }
+      .x-panel p { margin: 0 0 8px; } .x-panel p:last-child { margin-bottom: 0; }
+      .x-num { display: inline-block; background: var(--x-yel); color: #000; padding: 0 6px; margin-right: 8px; box-shadow: 2px 2px 0 var(--x-red); }
+      .x-code { word-break: break-all; color: var(--x-yel); }
+      .x-stats { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); margin-bottom: 14px; }
+      .x-stat b { display: block; font-size: clamp(22px, 3.4vw, 30px); color: var(--x-yel); text-shadow: 2px 2px 0 var(--x-red); line-height: 1.2; }
+      .x-stat span { color: var(--x-dim); font-size: 13px; }
+      .x-tabs { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+      .x-btn { min-height: 44px; padding: 0 16px; background: #000; color: #fff; border: 2px solid #fff; cursor: pointer;
+        font-weight: 700; font-size: 14px; letter-spacing: .06em; box-shadow: 3px 3px 0 var(--x-red); text-decoration: none;
+        display: inline-flex; align-items: center; justify-content: center; }
+      .x-btn:hover { background: #1d1833; }
+      .x-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--x-red); }
+      .x-btn[aria-pressed="true"] { background: var(--x-yel); color: #000; border-color: var(--x-yel); }
+      .x-btn:focus-visible, .x-input:focus-visible { outline: 3px solid var(--x-yel); outline-offset: 2px; }
+      .x-step { display: inline-flex; align-items: center; gap: 0; margin-left: auto; }
+      .x-step .x-btn { width: 44px; padding: 0; box-shadow: none; }
+      .x-step output { min-width: 64px; text-align: center; font-size: 16px; color: var(--x-yel); }
+      .x-prompt { white-space: pre-wrap; word-break: break-all; background: #000; border: 2px dashed var(--x-line);
+        padding: 14px; margin: 0 0 12px; font-size: 13px; line-height: 1.6; color: #e9e4ff; font-weight: 400; }
+      .x-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+      .x-input { flex: 1 1 260px; min-height: 44px; background: #000; color: #fff; border: 2px solid var(--x-line);
+        padding: 0 12px; font-size: 14px; }
+      .x-kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 10px; margin-top: 14px; }
+      .x-kv div { background: #000; border: 2px solid var(--x-line); padding: 10px; }
+      .x-kv dt { color: var(--x-dim); font-size: 12px; } .x-kv dd { margin: 2px 0 0; font-size: 18px; color: var(--x-yel); word-break: break-all; }
+      .x-kv[hidden] { display: none; }
+      .x-btn:disabled { opacity: .4; cursor: not-allowed; }
+      .x-msg { color: var(--x-dim); font-size: 13px; margin: 10px 0 0; min-height: 1em; }
+      .x-link { color: var(--x-yel); text-underline-offset: 3px; }
+      .x-foot { border-top: 3px solid var(--x-yel); margin-top: 40px; padding: 24px 0; font-size: 13px; color: var(--x-dim); }
+      .x-foot p { margin: 10px 0 0; }
+      @media (max-width: 600px) {
+        .x-hud { top: 2%; left: 2%; right: 2%; gap: 4px; }
+        .x-bar { border-width: 1px; box-shadow: 0 0 0 1px #000; }
+        .x-timer { min-width: 0; padding: 2px 4px; border-width: 1px; }
+        .x-fighter { height: 54%; } .x-fighter--a { left: 8%; } .x-fighter--b { right: 8%; }
+        .x-step { margin-left: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .x-fighter img, .x-blink { animation: none; }
+        .x-shake { animation: none; }
+      }
+    </style>
+  </head>
+  <body class="x-arcade">
+    <div class="x-crt" aria-hidden="true"></div>
+    <p class="x-demo" id="demo" hidden>演示模式 · 链上读取失败</p>
+
+    <div class="x-arena-wrap">
+      <section class="x-arena" id="arena" aria-label="对战场地">
+        <img class="x-stage" src="stage.jpg" alt="霓虹天台，BNB 月亮高挂" />
+        <div class="x-moon" aria-hidden="true">
+          <svg viewBox="-2 -2 130.6 130.6" xmlns="http://www.w3.org/2000/svg"><g fill="#F0B90B">
+            <polygon points="38.7,53.2 63.3,28.6 87.9,53.2 102.2,38.9 63.3,0 24.4,38.9" />
+            <polygon points="38.7,73.4 63.3,98 87.9,73.4 102.2,87.7 63.3,126.6 24.4,87.7" />
+            <polygon points="13.3,49 27.6,63.3 13.3,77.6 -1,63.3" />
+            <polygon points="113.3,49 127.6,63.3 113.3,77.6 99,63.3" />
+            <polygon points="63.3,48.8 77.8,63.3 63.3,77.8 48.8,63.3" />
+          </g></svg>
+        </div>
+        <div class="x-hud">
+          <div class="x-side x-side--a">
+            <p class="x-name" id="nameA">阵营 1 · 雷拳·岚</p>
+            <div class="x-bar" role="progressbar" aria-label="阵营 1 占本期合计 1,000 份" aria-valuemin="0" aria-valuemax="1000" id="barA" aria-valuenow="0">
+              <span class="x-dmg" id="dmgA"></span><span class="x-fill" id="fillA"></span>
+            </div>
+            <p class="x-count" id="cntA">0 份</p>
+          </div>
+          <div class="x-mid">
+            <p class="x-epoch" id="epoch">第 - 期</p>
+            <div class="x-timer" aria-live="polite">
+              <span class="x-timer__vs">VS</span>
+              <span class="x-timer__fig" id="tFig">--:--:--</span>
+              <span class="x-timer__sub" id="tSub">连接中</span>
+            </div>
+            <p class="x-sold" id="sold">已售 0 / 1,000</p>
+          </div>
+          <div class="x-side x-side--b">
+            <p class="x-name" id="nameB">阵营 2 · 霜刃·机</p>
+            <div class="x-bar" role="progressbar" aria-label="阵营 2 占本期合计 1,000 份" aria-valuemin="0" aria-valuemax="1000" id="barB" aria-valuenow="0">
+              <span class="x-dmg" id="dmgB"></span><span class="x-fill" id="fillB"></span>
+            </div>
+            <p class="x-count" id="cntB">0 份</p>
+          </div>
+        </div>
+        <div class="x-fighter x-fighter--a" id="fA">
+          <img data-art="a" src="fighter_a_v2.png" alt="阵营 1 雷拳·岚" /><img data-art="b" src="fighter_b_v2.png" alt="" hidden /><span class="x-spark"></span>
+        </div>
+        <div class="x-fighter x-fighter--b" id="fB">
+          <img data-art="a" src="fighter_a_v2.png" alt="" hidden /><img data-art="b" src="fighter_b_v2.png" alt="阵营 2 霜刃·机" /><span class="x-spark"></span>
+        </div>
+        <div class="x-banner" id="banner" hidden><p id="bannerText"></p></div>
+      </section>
+      <p class="x-pool" aria-live="polite"><span>奖励池<b id="poolAmt">-</b> 万枚</span><span>储备<b id="resAmt">-</b> 万枚</span></p>
+    </div>
+
+    <div class="page x-wrap" id="top">
+      <main>
+        <section class="x-sec" id="how">
+          <h2>怎么打</h2>
+          <p class="x-sec__sub">一期一局：入场、站队、结束、开奖。第 1 期开池子，第 2 期起守擂。</p>
+          <div class="x-grid">
+            <div class="x-panel">
+              <h3><span class="x-num">01</span>入场资格</h3>
+              <p>只限持有币安 .ai Agent ID 的钱包，合约链上校验 Agent ID NFT <span class="x-code">0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F</span>。</p>
+            </div>
+            <div class="x-panel">
+              <h3><span class="x-num">02</span>选阵营</h3>
+              <p>一份 0.002 BNB，胜方领 6,666 枚 $DUEL。每个钱包每期两边合计最多 10 份，买哪边都行。</p>
+            </div>
+            <div class="x-panel">
+              <h3><span class="x-num">03</span>结束</h3>
+              <p>每期两边合计 1,000 份，卖满即开盘。</p>
+              <p>计时从第一笔下单起 12 小时；到时未卖满，本期自动结束。</p>
+            </div>
+            <div class="x-panel">
+              <h3><span class="x-num">04</span>开奖</h3>
+              <p>结束后第一个比特币区块哈希最后一位：单 = 阵营 1 胜，双 = 阵营 2 胜。</p>
+              <p>合约链上校验区块头，没人能操控。</p>
+            </div>
+            <div class="x-panel">
+              <h3><span class="x-num">05</span>第 1 期</h3>
+              <p>结束时 80% BNB + 每卖 1 份配 2,666 枚进 PancakeSwap V2 池子，LP 打入黑洞；20% 进金库。</p>
+              <p>开盘价下胜方一份约值下注额 2 倍。败方每份领 666.6 枚，其余 90% 销毁。</p>
+            </div>
+            <div class="x-panel">
+              <h3><span class="x-num">06</span>第 2 期起</h3>
+              <p>上一期胜方角色守擂，对战随机挑战者。</p>
+              <p><b>用 BNB 押：</b>80% 当场回购 $DUEL 进奖励池，20% 进金库，败方每份领 666.6 枚。</p>
+              <p><b>用 $DUEL 押：</b>一份价格按提交时的池子价计算，等值 0.002 BNB 再多付 10%（即 0.0022 BNB 等值的 $DUEL），不再开局锁定。80% 进奖励池，20% 进金库，押输一枚不退。</p>
+              <p>奖励先从奖励池出，不够从储备补，剩余留给下一期。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="x-sec" id="token">
+          <h2>代币</h2>
+          <p class="x-sec__sub">团队零份额，全部由合约持有作储备。开盘前代币不可转让。</p>
+          <div class="x-stats">
+            <div class="x-panel x-stat"><b>1,000,000,000</b><span>$DUEL 总量</span></div>
+            <div class="x-panel x-stat"><b>0</b><span>团队份额</span></div>
+            <div class="x-panel x-stat"><b>2%</b><span>池子买卖税，直接进金库</span></div>
+            <div class="x-panel x-stat"><b>≥2.5%</b><span>卖出时滑点设置</span></div>
+          </div>
+          <div class="x-grid">
+            <div class="x-panel">
+              <h3>免税</h3>
+              <p>钱包互转、合约回购与加池免税。</p>
+            </div>
+            <div class="x-panel">
+              <h3>owner 权限</h3>
+              <p>只能开启新一期，动不了储备、奖励池和用户资产。</p>
+            </div>
+          </div>
+          <div class="x-panel" style="margin-top:14px">
+            <h3>合约地址 · BSC 主网（chainId 56）</h3>
+            <p><span class="x-code">0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094</span></p>
+            <div class="x-row">
+              <button class="x-btn" type="button" id="copyAddr2">复制</button>
+              <a class="x-btn" href="https://bscscan.com/address/0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094" target="_blank" rel="noopener">在 BscScan 查看</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="x-sec" id="ai">
+          <h2>AI 一键参与</h2>
+          <p class="x-sec__sub">选阵营和份数，复制提示词交给你的 Agent。</p>
+          <div class="x-panel">
+            <div class="x-tabs" role="group" aria-label="支付方式">
+              <button class="x-btn" type="button" id="payBnb" aria-pressed="true">用 BNB 押</button>
+              <button class="x-btn" type="button" id="payTok" aria-pressed="false">用 $DUEL 押</button>
+            </div>
+            <div class="x-tabs">
+              <button class="x-btn" type="button" id="tabA" aria-pressed="true">阵营 1 · 雷拳·岚</button>
+              <button class="x-btn" type="button" id="tabB" aria-pressed="false">阵营 2 · 霜刃·机</button>
+              <div class="x-step" role="group" aria-label="份数">
+                <button class="x-btn" type="button" id="nMinus" aria-label="减少一份">−</button>
+                <output id="nOut" aria-live="polite">1 份</output>
+                <button class="x-btn" type="button" id="nPlus" aria-label="增加一份">+</button>
+              </div>
+            </div>
+            <p class="x-msg" id="tokPrice" aria-live="polite" hidden></p>
+            <pre class="x-prompt" id="pMint"></pre>
+            <button class="x-btn" type="button" data-copy="pMint">复制</button>
+          </div>
+          <div class="x-grid" style="margin-top:14px">
+            <div class="x-panel">
+              <h3>结束本期（卖满或截止后）</h3>
+              <pre class="x-prompt" id="pOpen"></pre>
+              <button class="x-btn" type="button" data-copy="pOpen" id="openBtn" disabled>复制</button>
+              <p class="x-msg" id="openMsg" aria-live="polite">合计卖满 1,000 份，或第一笔下单起满 12 小时后可用。</p>
+            </div>
+            <div class="x-panel">
+              <h3>领取（开奖后）</h3>
+              <pre class="x-prompt" id="pClaim"></pre>
+              <button class="x-btn" type="button" data-copy="pClaim">复制</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="x-sec" id="me">
+          <h2>查我的战绩</h2>
+          <p class="x-sec__sub">输入 BSC 地址，读取链上份数和可领数量。</p>
+          <div class="x-panel">
+            <form class="x-row" id="userForm">
+              <input class="x-input" id="addr" aria-label="BSC 地址" placeholder="0x…" autocomplete="off" spellcheck="false" />
+              <button class="x-btn" type="submit">查询</button>
+            </form>
+            <dl class="x-kv" id="userOut" hidden>
+              <div><dt>阵营 1 份数</dt><dd id="uA">-</dd></div>
+              <div><dt>阵营 2 份数</dt><dd id="uB">-</dd></div>
+              <div><dt>剩余可买份数</dt><dd id="uLeft">-</dd></div>
+              <div><dt>持有 Agent ID</dt><dd id="uAgent">-</dd></div>
+              <div><dt>可领取 $DUEL</dt><dd id="uClaim">-</dd></div>
+              <div><dt>已领取</dt><dd id="uClaimed">-</dd></div>
+            </dl>
+            <p class="x-msg" id="userMsg" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <section class="x-sec" id="draw">
+          <h2>开奖记录</h2>
+          <div class="x-panel" id="drawBox" aria-live="polite">
+            <p class="x-blink">等待本期结束后第一个比特币区块</p>
+          </div>
+        </section>
+      </main>
+      <footer class="x-foot">
+        <div class="x-row">
+          <span>合约地址：<span class="x-code" id="cAddr">0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094</span></span>
+          <button class="x-btn" type="button" id="copyAddr">复制</button>
+          <a class="x-btn" id="scanLink" href="https://bscscan.com/address/0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094" target="_blank" rel="noopener">BscScan</a>
+        </div>
+        <p>本站不构成投资建议。</p>
+      </footer>
+    </div>
+
+    <script src="hark.js"></script>
+    <script>
+      const CONTRACT = "0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094"; // BSC 主网，chainId 56
+      const CHAIN_ID = 56;
+      const RPCS = ["https://bsc-dataseed.bnbchain.org", "https://bsc-rpc.publicnode.com", "https://bsc.drpc.org"];
+
+      (function () {
+        const CAP = 1000;
+        let side = 1, n = 1, pay = "bnb", tokPrice = "";
+        const FIGHTERS = ["雷拳·岚", "霜刃·机", "雷鸣·迅", "冰凰·雪", "铁拳·岩", "疾风·岚", "暗影·魅", "金刚·霸", "赤龙·焰", "银狼·牙", "星辰·曜", "鬼面·冥"];
+        const fname = (i) => FIGHTERS[i] || "角色 " + i;
+        const NAMES = { 1: "阵营 1 · 雷拳·岚", 2: "阵营 2 · 霜刃·机" };
+        const SHORT = { 1: "1", 2: "2" };
+        const pad = (v) => BigInt(v).toString(16).padStart(64, "0");
+        const $ = (id) => document.getElementById(id);
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const fmt = (n) => Number(n).toLocaleString("en-US");
+        const C = CONTRACT || "<合约地址>";
+
+        /* ---------- JSON-RPC ---------- */
+        let rpcIdx = 0;
+        const rpcCool = [];
+        async function ethCall(data) {
+          let err;
+          const now = Date.now();
+          // 从上次成功的节点开始；被限流（429）或出错的节点冷却一段时间再用
+          const order = RPCS.map((_, i) => (rpcIdx + i) % RPCS.length).filter((i) => (rpcCool[i] || 0) <= now);
+          if (!order.length) throw new Error("RPC 冷却中");
+          for (const i of order) {
+            const url = RPCS[i];
+            const ctl = new AbortController();
+            const to = setTimeout(() => ctl.abort(), 8000);
+            try {
+              const r = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_call", params: [{ to: CONTRACT, data }, "latest"] }),
+                signal: ctl.signal,
+              });
+              if (r.status === 429) { rpcCool[i] = Date.now() + 120000; err = new Error("429"); continue; }
+              const j = await r.json();
+              if (j.result && j.result.length > 2) { rpcIdx = i; return j.result; }
+              err = new Error(j.error ? j.error.message : "空返回");
+              rpcCool[i] = Date.now() + 30000;
+            } catch (e) { err = e; rpcCool[i] = Date.now() + 30000; }
+            finally { clearTimeout(to); }
+          }
+          throw err || new Error("RPC 全部失败");
+        }
+        function words(hex) {
+          hex = hex.replace(/^0x/, "");
+          const w = [];
+          for (let i = 0; i + 64 <= hex.length; i += 64) w.push(hex.slice(i, i + 64));
+          return w;
+        }
+        const U = (w) => BigInt("0x" + w);
+        function units18(bi) {
+          const base = 10n ** 18n;
+          const whole = bi / base;
+          let frac = (bi % base).toString().padStart(18, "0").slice(0, 4).replace(/0+$/, "");
+          return whole.toLocaleString("en-US") + (frac ? "." + frac : "");
+        }
+        function decodeState(hex) {
+          const w = words(hex);
+          if (w.length < 14) throw new Error("getState 返回长度不对");
+          return {
+            id: Number(U(w[0])), startTime: Number(U(w[1])), deadline: Number(U(w[2])),
+            a: Number(U(w[3])), b: Number(U(w[4])),
+            opened: U(w[5]) !== 0n, openedAt: Number(U(w[6])),
+            winner: Number(U(w[7])), hash: "0x" + w[8],
+            f1: Number(U(w[9])), f2: Number(U(w[10])),
+            pool: U(w[11]), reserve: U(w[12]), pair: "0x" + w[13].slice(24),
+          };
+        }
+        function wan(bi) {
+          const v = Number(bi / 10n ** 14n) / 1e4; // 枚
+          return (v / 1e4).toLocaleString("en-US", { maximumFractionDigits: 2 });
+        }
+        function setFighter(slot, idx, sideNo) {
+          const art = idx === 0 ? "a" : "b";
+          const label = `阵营 ${sideNo} ${fname(idx)}`;
+          $(slot).querySelectorAll("img").forEach((im) => {
+            const on = im.dataset.art === art;
+            im.hidden = !on; im.alt = on ? label : "";
+          });
+        }
+        let lastKey = "";
+        function applyEpoch(s) {
+          NAMES[1] = "阵营 1 · " + fname(s.f1);
+          NAMES[2] = "阵营 2 · " + fname(s.f2);
+          $("epoch").textContent = `第 ${s.id + 1} 期`;
+          $("poolAmt").textContent = wan(s.pool);
+          $("resAmt").textContent = wan(s.reserve);
+          const key = s.id + ":" + s.f1 + ":" + s.f2;
+          if (key === lastKey) return;
+          lastKey = key;
+          $("nameA").textContent = NAMES[1]; $("nameB").textContent = NAMES[2];
+          $("tabA").textContent = NAMES[1]; $("tabB").textContent = NAMES[2];
+          setFighter("fA", s.f1, 1); setFighter("fB", s.f2, 2);
+          updatePrompt();
+        }
+
+        /* ---------- Arena ---------- */
+        let state = null, prev = null, fightShown = false;
+        function setBar(side, shares) {
+          const pct = Math.min(shares / CAP, 1);
+          const hue = Math.round(52 - 52 * pct);
+          $("dmg" + side).style.width = pct * 100 + "%";
+          $("fill" + side).style.width = pct * 100 + "%";
+          $("fill" + side).style.backgroundColor = `hsl(${hue} 100% 50%)`;
+          $("bar" + side).setAttribute("aria-valuenow", shares);
+          $("cnt" + side).textContent = `${fmt(shares)} 份`;
+        }
+        function setSold(s) {
+          $("sold").textContent = `已售 ${fmt(s.a + s.b)} / ${fmt(CAP)}`;
+        }
+        function attack(side) {
+          if (reduce) return;
+          const atk = $(side === "A" ? "fA" : "fB"), def = $(side === "A" ? "fB" : "fA"), arena = $("arena");
+          atk.classList.add("x-lunge");
+          setTimeout(() => {
+            def.classList.remove("x-hit"); void def.offsetWidth; def.classList.add("x-hit");
+            arena.classList.remove("x-shake"); void arena.offsetWidth; arena.classList.add("x-shake");
+          }, 120);
+          setTimeout(() => atk.classList.remove("x-lunge"), 320);
+          setTimeout(() => { def.classList.remove("x-hit"); arena.classList.remove("x-shake"); }, 460);
+        }
+        function banner(html, cls) {
+          const b = $("banner"), t = $("bannerText");
+          t.innerHTML = html; t.className = cls || ""; b.hidden = false;
+        }
+        function render(s) {
+          if (prev && prev.id !== s.id) { prev = null; fightShown = false; $("banner").hidden = true; }
+          state = s;
+          applyEpoch(s);
+          setBar("A", s.a); setBar("B", s.b); setSold(s);
+          if (prev) {
+            const upA = s.a > prev.a, upB = s.b > prev.b;
+            if (upA) attack("A");
+            if (upB) setTimeout(() => attack("B"), upA ? 520 : 0);
+          }
+          prev = { ...s };
+          const now = Date.now() / 1000;
+          if (s.winner) {
+            banner(`K.O.<small>阵营 ${SHORT[s.winner]} WIN!</small>`, "");
+          } else if (now < s.startTime) {
+            banner("READY", "x-blink");
+          } else if (!s.opened && !fightShown) {
+            fightShown = true;
+            banner("FIGHT!", "x-flash");
+            setTimeout(() => { if (!state.winner) $("banner").hidden = true; }, 1700);
+          } else if (!s.winner && $("bannerText").textContent === "READY") {
+            $("banner").hidden = true;
+          }
+          renderDraw(s);
+          tick();
+        }
+        function hms(sec) {
+          sec = Math.max(0, Math.floor(sec));
+          const p = (n) => String(n).padStart(2, "0");
+          return `${p(Math.floor(sec / 3600))}:${p(Math.floor((sec % 3600) / 60))}:${p(sec % 60)}`;
+        }
+        function tick() {
+          const s = state; if (!s) return;
+          const now = Date.now() / 1000;
+          const full = s.a + s.b >= CAP;
+          const canClose = !s.opened && !s.winner && (full || (s.deadline !== 0 && now >= s.deadline));
+          let fig, sub, wait = false;
+          if (s.winner) { fig = "K.O."; sub = NAMES[s.winner] + " 胜"; }
+          else if (s.opened) { fig = "结束"; sub = "等待比特币区块"; }
+          else if (now < s.startTime) { fig = "--:--:--"; sub = "READY"; }
+          else if (full) { fig = "卖满"; sub = "可结束本期"; }
+          else if (s.deadline === 0) { fig = "等待第一笔下单"; sub = "下单起计时 12 小时"; wait = true; }
+          else if (now >= s.deadline) { fig = "00:00:00"; sub = "可结束本期"; }
+          else { fig = hms(s.deadline - now); sub = "距本期结束"; }
+          $("tFig").textContent = fig; $("tSub").textContent = sub;
+          $("tFig").classList.toggle("x-wait", wait);
+          $("openBtn").disabled = !canClose;
+          $("openMsg").textContent = canClose ? (full ? "已卖满 1,000 份，可结束本期。" : "12 小时已到，可结束本期。")
+            : s.opened || s.winner ? "本期已结束。" : "合计卖满 1,000 份，或第一笔下单起满 12 小时后可用。";
+        }
+        setInterval(tick, 1000);
+
+        function renderDraw(s) {
+          const box = $("drawBox");
+          if (!s.winner) {
+            box.innerHTML = `<p class="x-blink">等待第 ${s.id + 1} 期结束后第一个比特币区块</p>` +
+              (s.opened ? `<p>本期已结束，任何人可提交比特币区块头完成开奖。</p>` : "");
+            return;
+          }
+          const h = s.hash.replace(/^0x/, "");
+          box.innerHTML = `<h3>第 ${s.id + 1} 期胜者：${NAMES[s.winner]}</h3>
+            <p>比特币区块哈希：<span class="x-code">${s.hash}</span></p>
+            <p>最后一位「${h.slice(-1)}」为${s.winner === 1 ? "单 → 阵营 1 胜" : "双 → 阵营 2 胜"}。</p>
+            <p><a class="x-link" href="https://mempool.space/block/${h}" target="_blank" rel="noopener">在 mempool.space 查看区块</a></p>`;
+        }
+
+        /* ---------- Live / Demo ---------- */
+        // 默认读链上；只有在还没读到过任何数据、且所有 RPC 连续两轮都失败时才切到演示模式
+        let isDemo = false, live = false, fails = 0, pollT = 0, priceT = 0;
+        async function poll() {
+          if (isDemo) return;
+          try { render(decodeState(await ethCall("0x1865c57d"))); live = true; fails = 0; }
+          catch (e) {
+            fails++;
+            if (!live && fails >= 2) startDemo();
+            else $("tSub").textContent = "RPC 重试中";
+          }
+        }
+        async function pollPrice() {
+          if (isDemo) return;
+          try {
+            const w = words(await ethCall("0x2ee4b3fa"));
+            if (w.length) { tokPrice = units18(U(w[0])); updatePrompt(); }
+          } catch (e) {}
+        }
+        poll().then(() => { if (!isDemo) pollPrice(); });
+        pollT = setInterval(poll, 10000);
+        priceT = setInterval(pollPrice, 60000);
+
+        function startDemo() {
+          if (isDemo) return;
+          isDemo = true;
+          clearInterval(pollT); clearInterval(priceT);
+          $("demo").hidden = false;
+          updatePrompt();
+          const now = Math.floor(Date.now() / 1000);
+          const E18 = 10n ** 18n;
+          // 第一笔下单在 4h18m 前，12 小时计时剩 07:42:15
+          const demo = { id: 1, startTime: now - (4 * 3600 + 18 * 60) - 600, deadline: now + 7 * 3600 + 42 * 60 + 15, a: 420, b: 310, opened: false, openedAt: 0, winner: 0,
+            hash: "0x" + "0".repeat(64), f1: 0, f2: 8, pool: 1200000n * E18, reserve: 980000000n * E18,
+            pair: "0x" + "0".repeat(40) };
+          render({ ...demo });
+          const rnd = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+          const timer = setInterval(() => {
+            if (demo.opened) return;
+            if (Math.random() < 0.3) demo.a = Math.min(CAP - demo.b, demo.a + rnd(1, 5));
+            if (Math.random() < 0.3) demo.b = Math.min(CAP - demo.a, demo.b + rnd(1, 5));
+            if (demo.a + demo.b >= CAP) {
+              demo.opened = true; demo.openedAt = Math.floor(Date.now() / 1000);
+              clearInterval(timer);
+              setTimeout(() => {
+                let h = "00000000000000000002";
+                while (h.length < 64) h += "0123456789abcdef"[rnd(0, 15)];
+                demo.hash = "0x" + h;
+                demo.winner = parseInt(h.slice(-1), 16) % 2 ? 1 : 2;
+                render({ ...demo });
+              }, 8000);
+            }
+            render({ ...demo });
+          }, 3000);
+        }
+
+        /* ---------- Prompts ---------- */
+        function mintText() {
+          if (pay === "tok") {
+            const cd = "0xda2f98c8" + pad(side) + pad(n);
+            return `先读合约 ${C} 的 tokenPricePerShare()（selector 0x2ee4b3fa）看每份要多少 $DUEL，钱包需有 n×该数量的 $DUEL。
+调用合约 ${C} 的 mintWithToken(uint8 side, uint256 n)，side=${side}，n=${n}，value 0，calldata ${cd}。`;
+          }
+          const value = (n * 2 / 1000).toString();
+          const calldata = "0xf26748e2" + pad(side) + pad(n);
+          return `帮我在 BSC 上参与 KOF DUEL：调用合约 ${C} 的 mint(uint8 side, uint256 n)，side=${side}（1=${NAMES[1]}，2=${NAMES[2]}），n=${n}，value=${value} BNB。我持有 .ai Agent ID。
+baw contract-call preview --binanceChainId 56 --to ${C} --value ${value} --inputData ${calldata} --json
+确认无风险后 baw contract-call execute --requestId <REQUEST_ID> --json`;
+        }
+        function updatePrompt() {
+          $("pMint").textContent = mintText();
+          $("nOut").textContent = n + " 份";
+          $("tabA").setAttribute("aria-pressed", side === 1);
+          $("tabB").setAttribute("aria-pressed", side === 2);
+          $("payBnb").setAttribute("aria-pressed", pay === "bnb");
+          $("payTok").setAttribute("aria-pressed", pay === "tok");
+          $("tokPrice").hidden = pay !== "tok";
+          $("tokPrice").textContent = "当前每份：" + (tokPrice ? tokPrice + " $DUEL" : isDemo ? "RPC 读取失败，暂无法显示" : "读取中…") + "（按提交时池子价，等值 0.0022 BNB）";
+          $("nMinus").disabled = n <= 1; $("nPlus").disabled = n >= 10;
+          const id = state ? state.id : 0;
+          $("pClaim").textContent = `调用合约 ${C} 的 claim(uint256 epochId)，epochId=${id}（第 ${id + 1} 期），calldata 0x379607f5${pad(id)}，value 0。`;
+        }
+        $("payBnb").onclick = () => { pay = "bnb"; updatePrompt(); };
+        $("payTok").onclick = () => { pay = "tok"; updatePrompt(); };
+        $("tabA").onclick = () => { side = 1; updatePrompt(); };
+        $("tabB").onclick = () => { side = 2; updatePrompt(); };
+        $("nMinus").onclick = () => { n = Math.max(1, n - 1); updatePrompt(); };
+        $("nPlus").onclick = () => { n = Math.min(10, n + 1); updatePrompt(); };
+        $("pOpen").textContent = `调用合约 ${C} 的 closeEpoch()，calldata 0xcdd5f2c8，value 0。`;
+        updatePrompt();
+
+        function copy(text, btn) {
+          if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+          const show = (t) => {
+            btn.textContent = t;
+            btn.setAttribute("aria-pressed", "true");
+            clearTimeout(btn._t);
+            btn._t = setTimeout(() => { btn.textContent = btn.dataset.label; btn.removeAttribute("aria-pressed"); }, 1600);
+          };
+          const fallback = () => {
+            let ok = false;
+            const ta = document.createElement("textarea");
+            ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
+            document.body.appendChild(ta); ta.select();
+            try { ok = document.execCommand("copy"); } catch (e) {}
+            ta.remove();
+            show(ok ? "已复制 ✓" : "请手动复制");
+          };
+          show("复制中…");
+          try {
+            if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => show("已复制 ✓"), fallback);
+            else fallback();
+          } catch (e) { fallback(); }
+        }
+        document.querySelectorAll("[data-copy]").forEach((b) => (b.onclick = () => copy($(b.dataset.copy).textContent, b)));
+
+        /* ---------- Footer ---------- */
+        $("copyAddr").onclick = (e) => copy(CONTRACT, e.currentTarget);
+        $("copyAddr2").onclick = (e) => copy(CONTRACT, e.currentTarget);
+
+        /* ---------- getUser ---------- */
+        $("userForm").onsubmit = async (e) => {
+          e.preventDefault();
+          const addr = $("addr").value.trim();
+          const msg = $("userMsg");
+          if (!/^0x[0-9a-fA-F]{40}$/.test(addr)) { msg.textContent = "请输入正确的 BSC 地址（0x 开头，40 位十六进制）。"; return; }
+          if (isDemo) { msg.textContent = "演示模式：RPC 读取失败，暂时无法查询，请刷新重试。"; return; }
+          if (!state) { msg.textContent = "正在读取当前期数，请稍后再试。"; return; }
+          msg.textContent = `查询第 ${state.id + 1} 期…`;
+          try {
+            const w = words(await ethCall("0x257664a4" + pad(state.id) + addr.slice(2).toLowerCase().padStart(64, "0")));
+            if (w.length < 6) throw new Error("返回长度不对");
+            $("uA").textContent = U(w[0]).toString() + " 份";
+            $("uB").textContent = U(w[1]).toString() + " 份";
+            $("uLeft").textContent = U(w[2]).toString() + " 份";
+            $("uAgent").textContent = U(w[3]) !== 0n ? "是" : "否";
+            $("uClaim").textContent = units18(U(w[4]));
+            $("uClaimed").textContent = U(w[5]) !== 0n ? "是" : "否";
+            $("userOut").hidden = false; msg.textContent = "";
+          } catch (err) { msg.textContent = "查询失败：" + err.message; }
+        };
+      })();
+    </script>
+  </body>
+</html>
