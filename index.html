@@ -222,14 +222,14 @@
             </div>
             <div class="x-panel">
               <h3><span class="x-num">05</span>开盘</h3>
-              <p>累计交易满 10,000 笔，合约自动建 PancakeSwap V2 池子：开盘前攒下的 80% BNB + 每份付费 400 枚进池，LP 打入黑洞。</p>
-              <p>开盘价下胜方一份约值下注额 2 倍。开盘前赢的奖励先记账，开盘后一键领取；败方没发的 90% 销毁。</p>
+              <p>累计交易满 10,000 笔，合约自动建 PancakeSwap V2 池子：开盘前攒下的 90% BNB（另 10% 进金库）+ 每份付费 400 枚进池，LP 打入黑洞。</p>
+              <p>开盘价下胜方一份约值下注额 2.25 倍。开盘前赢的奖励先记账，开盘后一键领取；败方没发的 90% 销毁。</p>
             </div>
             <div class="x-panel">
               <h3><span class="x-num">06</span>开盘后</h3>
               <p>上一期胜方守擂，对战随机挑战者。</p>
-              <p><b>用 BNB 押：</b>80% 当场回购 $DUEL 进奖励池，20% 进金库。</p>
-              <p><b>用 $DUEL 押：</b>一份按提交时池子价等值 0.002 BNB 再多付 10%，80% 进奖励池、20% 进金库，押输一枚不退。</p>
+              <p><b>用 BNB 押：</b>90% 当场回购 $DUEL 进奖励池，10% 进金库。</p>
+              <p><b>用 $DUEL 押：</b>一份按提交时池子价等值 0.002 BNB 再多付 10%，90% 进奖励池、10% 进金库，押输一枚不退。</p>
               <p>发奖先从奖励池出，不够从储备补。</p>
             </div>
           </div>
@@ -256,10 +256,10 @@
           </div>
           <div class="x-panel" style="margin-top:14px">
             <h3>合约地址 · BSC 主网（chainId 56）</h3>
-            <p><span class="x-code">0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6</span></p>
+            <p><span class="x-code">0x82c5563C3c7521772D06928D4470c2861868E99B</span></p>
             <div class="x-row">
               <button class="x-btn" type="button" id="copyAddr2">复制</button>
-              <a class="x-btn" href="https://bscscan.com/address/0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6" target="_blank" rel="noopener">在 BscScan 查看</a>
+              <a class="x-btn" href="https://bscscan.com/address/0x82c5563C3c7521772D06928D4470c2861868E99B" target="_blank" rel="noopener">在 BscScan 查看</a>
             </div>
           </div>
         </section>
@@ -330,9 +330,9 @@
       </main>
       <footer class="x-foot">
         <div class="x-row">
-          <span>合约地址：<span class="x-code" id="cAddr">0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6</span></span>
+          <span>合约地址：<span class="x-code" id="cAddr">0x82c5563C3c7521772D06928D4470c2861868E99B</span></span>
           <button class="x-btn" type="button" id="copyAddr">复制</button>
-          <a class="x-btn" id="scanLink" href="https://bscscan.com/address/0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6" target="_blank" rel="noopener">BscScan</a>
+          <a class="x-btn" id="scanLink" href="https://bscscan.com/address/0x82c5563C3c7521772D06928D4470c2861868E99B" target="_blank" rel="noopener">BscScan</a>
         </div>
         <p>本站不构成投资建议。</p>
       </footer>
@@ -340,7 +340,7 @@
 
     <script src="hark.js"></script>
     <script>
-      const CONTRACT = "0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6"; // KofDuelV3，BSC 主网
+      const CONTRACT = "0x82c5563C3c7521772D06928D4470c2861868E99B"; // KofDuelV3，BSC 主网
       const RPCS = ["https://bsc-dataseed.bnbchain.org", "https://bsc-rpc.publicnode.com", "https://bsc.drpc.org"];
       (function () {
         const LAUNCH = 10000, ROUND_TRADES = 100;
