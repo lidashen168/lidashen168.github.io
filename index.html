@@ -42,7 +42,7 @@
       .x-fighter--a { left: 12%; } .x-fighter--b { right: 12%; }
       .x-fighter img { height: 100%; width: auto; display: block; image-rendering: pixelated;
         animation: x-bob .6s steps(2) infinite; filter: drop-shadow(0 6px 0 rgba(0,0,0,.45)); }
-      .x-fighter--b img { animation-delay: -.3s; }
+      .x-fighter--b img { animation-delay: -.3s; scale: -1 1; }
       .x-fighter img[hidden] { display: none; }
       @keyframes x-bob { 0%{transform:translateY(0)} 100%{transform:translateY(-3%)} }
       .x-fighter--a.x-lunge { transform: translateX(45%); }
@@ -185,10 +185,10 @@
           </div>
         </div>
         <div class="x-fighter x-fighter--a" id="fA">
-          <img data-art="a" src="fighter_a_v2.png" alt="Side A 雷拳·岚" /><img data-art="b" src="fighter_b_v2.png" alt="" hidden /><span class="x-spark"></span>
+          <img data-art="a" src="fighter_a_v2.png" alt="" hidden /><img data-art="b" src="fighter_b_v2.png" alt="Side A 雷拳·岚" /><span class="x-spark"></span>
         </div>
         <div class="x-fighter x-fighter--b" id="fB">
-          <img data-art="a" src="fighter_a_v2.png" alt="" hidden /><img data-art="b" src="fighter_b_v2.png" alt="Side B 霜刃·机" /><span class="x-spark"></span>
+          <img data-art="a" src="fighter_a_v2.png" alt="Side B 霜刃·机" /><img data-art="b" src="fighter_b_v2.png" alt="" hidden /><span class="x-spark"></span>
         </div>
         <div class="x-banner" id="banner" hidden><p id="bannerText"></p></div>
       </section>
@@ -396,7 +396,7 @@
             pool: U(w[21]), reserve: U(w[22]), pair: "0x" + w[23].slice(24) };
         }
         function setFighter(slot, idx, sideNo) {
-          const art = idx % 2 === 0 ? "a" : "b";
+          const art = idx % 2 === 0 ? "b" : "a"; // fighter_b_v2 = lightning fighter (even), fighter_a_v2 = frost mech (odd)
           $(slot).querySelectorAll("img").forEach((im) => { const on = im.dataset.art === art; im.hidden = !on; im.alt = on ? `Side ${sideNo === 1 ? "A" : "B"} ${fname(idx)}` : ""; });
         }
         let lastKey = "";
