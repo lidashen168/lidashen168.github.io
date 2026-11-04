@@ -161,7 +161,7 @@
         </div>
         <div class="x-hud">
           <div class="x-side x-side--a">
-            <p class="x-name" id="nameA">Side A · 雷拳·岚</p>
+            <p class="x-name" id="nameA">Side A · Thunder Fist Ran</p>
             <div class="x-bar" role="progressbar" aria-label="Side A share of this round" aria-valuemin="0" aria-valuemax="100" id="barA" aria-valuenow="0">
               <span class="x-dmg" id="dmgA"></span><span class="x-fill" id="fillA"></span>
             </div>
@@ -177,7 +177,7 @@
             <p class="x-sold" id="sold">This round 0 / 100 trades</p>
           </div>
           <div class="x-side x-side--b">
-            <p class="x-name" id="nameB">Side B · 霜刃·机</p>
+            <p class="x-name" id="nameB">Side B · Frost Blade Mech</p>
             <div class="x-bar" role="progressbar" aria-label="Side B share of this round" aria-valuemin="0" aria-valuemax="100" id="barB" aria-valuenow="0">
               <span class="x-dmg" id="dmgB"></span><span class="x-fill" id="fillB"></span>
             </div>
@@ -185,10 +185,10 @@
           </div>
         </div>
         <div class="x-fighter x-fighter--a" id="fA">
-          <img data-art="a" src="fighter_a_v2.png" alt="" hidden /><img data-art="b" src="fighter_b_v2.png" alt="Side A 雷拳·岚" /><span class="x-spark"></span>
+          <img data-art="a" src="fighter_a_v2.png" alt="" hidden /><img data-art="b" src="fighter_b_v2.png" alt="Side A Thunder Fist Ran" /><span class="x-spark"></span>
         </div>
         <div class="x-fighter x-fighter--b" id="fB">
-          <img data-art="a" src="fighter_a_v2.png" alt="Side B 霜刃·机" /><img data-art="b" src="fighter_b_v2.png" alt="" hidden /><span class="x-spark"></span>
+          <img data-art="a" src="fighter_a_v2.png" alt="Side B Frost Blade Mech" /><img data-art="b" src="fighter_b_v2.png" alt="" hidden /><span class="x-spark"></span>
         </div>
         <div class="x-banner" id="banner" hidden><p id="bannerText"></p></div>
       </section>
@@ -274,8 +274,8 @@
               <button class="x-btn" type="button" id="payTok" aria-pressed="false">Bet with $DUEL</button>
             </div>
             <div class="x-tabs">
-              <button class="x-btn" type="button" id="tabA" aria-pressed="true">Side A · 雷拳·岚</button>
-              <button class="x-btn" type="button" id="tabB" aria-pressed="false">Side B · 霜刃·机</button>
+              <button class="x-btn" type="button" id="tabA" aria-pressed="true">Side A · Thunder Fist Ran</button>
+              <button class="x-btn" type="button" id="tabB" aria-pressed="false">Side B · Frost Blade Mech</button>
               <div class="x-step" role="group" aria-label="Shares">
                 <button class="x-btn" type="button" id="nMinus" aria-label="One share less">−</button>
                 <output id="nOut" aria-live="polite">1 share</output>
@@ -345,9 +345,9 @@
       (function () {
         const LAUNCH = 10000, ROUND_TRADES = 100;
         let side = 1, n = 1, pay = "bnb", tokPrice = "";
-        const FIGHTERS = ["雷拳·岚", "霜刃·机", "雷鸣·迅", "冰凰·雪", "铁拳·岩", "疾风·岚", "暗影·魅", "金刚·霸", "赤龙·焰", "银狼·牙", "星辰·曜", "鬼面·冥"];
+        const FIGHTERS = ["Thunder Fist Ran", "Frost Blade Mech", "Thunder Swift", "Ice Phoenix Yuki", "Iron Fist Rock", "Gale Storm", "Shadow Wraith", "Titan Overlord", "Red Dragon Blaze", "Silver Wolf Fang", "Star Lumen", "Oni Mask Shade"];
         const fname = (i) => FIGHTERS[i] || "Fighter " + i;
-        const NAMES = { 1: "Side A · 雷拳·岚", 2: "Side B · 霜刃·机" };
+        const NAMES = { 1: "Side A · Thunder Fist Ran", 2: "Side B · Frost Blade Mech" };
         const pad = (v) => BigInt(v).toString(16).padStart(64, "0");
         const $ = (id) => document.getElementById(id);
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
