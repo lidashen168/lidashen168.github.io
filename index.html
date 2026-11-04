@@ -162,7 +162,7 @@
         <div class="x-hud">
           <div class="x-side x-side--a">
             <p class="x-name" id="nameA">阵营 1 · 雷拳·岚</p>
-            <div class="x-bar" role="progressbar" aria-label="阵营 1 占本期合计 1,000 份" aria-valuemin="0" aria-valuemax="1000" id="barA" aria-valuenow="0">
+            <div class="x-bar" role="progressbar" aria-label="阵营 1 占本期份数比例" aria-valuemin="0" aria-valuemax="100" id="barA" aria-valuenow="0">
               <span class="x-dmg" id="dmgA"></span><span class="x-fill" id="fillA"></span>
             </div>
             <p class="x-count" id="cntA">0 份</p>
@@ -174,11 +174,11 @@
               <span class="x-timer__fig" id="tFig">--:--:--</span>
               <span class="x-timer__sub" id="tSub">连接中</span>
             </div>
-            <p class="x-sold" id="sold">已售 0 / 1,000</p>
+            <p class="x-sold" id="sold">本期 0 / 100 笔</p>
           </div>
           <div class="x-side x-side--b">
             <p class="x-name" id="nameB">阵营 2 · 霜刃·机</p>
-            <div class="x-bar" role="progressbar" aria-label="阵营 2 占本期合计 1,000 份" aria-valuemin="0" aria-valuemax="1000" id="barB" aria-valuenow="0">
+            <div class="x-bar" role="progressbar" aria-label="阵营 2 占本期份数比例" aria-valuemin="0" aria-valuemax="100" id="barB" aria-valuenow="0">
               <span class="x-dmg" id="dmgB"></span><span class="x-fill" id="fillB"></span>
             </div>
             <p class="x-count" id="cntB">0 份</p>
@@ -192,44 +192,45 @@
         </div>
         <div class="x-banner" id="banner" hidden><p id="bannerText"></p></div>
       </section>
-      <p class="x-pool" aria-live="polite"><span>奖励池<b id="poolAmt">-</b> 万枚</span><span>储备<b id="resAmt">-</b> 万枚</span></p>
+      <p class="x-pool" aria-live="polite"><span>开盘进度<b id="launchAmt">-</b> / 10,000 笔</span><span>奖励池<b id="poolAmt">-</b> 万枚</span><span>储备<b id="resAmt">-</b> 万枚</span></p>
     </div>
 
     <div class="page x-wrap" id="top">
       <main>
         <section class="x-sec" id="how">
           <h2>怎么打</h2>
-          <p class="x-sec__sub">一期一局：入场、站队、结束、开奖。第 1 期开池子，第 2 期起守擂。</p>
+          <p class="x-sec__sub">5 分钟一局，快打快开。累计 1 万笔自动建池开盘。</p>
           <div class="x-grid">
             <div class="x-panel">
               <h3><span class="x-num">01</span>入场资格</h3>
-              <p>只限持有币安 .ai Agent ID 的钱包，合约链上校验 Agent ID NFT <span class="x-code">0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F</span>。</p>
+              <p>只限币安 AI 钱包（持有 .ai Agent ID），合约链上校验 <span class="x-code">0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F</span>。</p>
+              <p>每个钱包终身 1 次免费机会，免费份奖励减半。付费不限次数、不限份数。</p>
             </div>
             <div class="x-panel">
               <h3><span class="x-num">02</span>选阵营</h3>
-              <p>一份 0.002 BNB，胜方领 6,666 枚 $DUEL。每个钱包每期两边合计最多 10 份，买哪边都行。</p>
+              <p>一份 0.002 BNB。胜方每份 1,000 枚 $DUEL，败方每份 100 枚。</p>
+              <p>免费份：胜 500 枚，败 50 枚。</p>
             </div>
             <div class="x-panel">
-              <h3><span class="x-num">03</span>结束</h3>
-              <p>每期两边合计 1,000 份，卖满即开盘。</p>
-              <p>计时从第一笔下单起 12 小时；到时未卖满，本期自动结束。</p>
+              <h3><span class="x-num">03</span>一期多久</h3>
+              <p>从本期第一笔起 5 分钟，或本期交易满 100 笔，先到先结束，自动开下一期。</p>
             </div>
             <div class="x-panel">
               <h3><span class="x-num">04</span>开奖</h3>
-              <p>结束后第一个比特币区块哈希最后一位：单 = 阵营 1 胜，双 = 阵营 2 胜。</p>
-              <p>合约链上校验区块头，没人能操控。</p>
+              <p>本期结束后第 5 个 BSC 区块的哈希：单 = 阵营 1 胜，双 = 阵营 2 胜。</p>
+              <p>任何人下单时顺带开奖。超过 256 个区块没人开，就顺延到之后第 5 块，谁都挑不了时机。</p>
             </div>
             <div class="x-panel">
-              <h3><span class="x-num">05</span>第 1 期</h3>
-              <p>结束时 80% BNB + 每卖 1 份配 2,666 枚进 PancakeSwap V2 池子，LP 打入黑洞；20% 进金库。</p>
-              <p>开盘价下胜方一份约值下注额 2 倍。败方每份领 666.6 枚，其余 90% 销毁。</p>
+              <h3><span class="x-num">05</span>开盘</h3>
+              <p>累计交易满 10,000 笔，合约自动建 PancakeSwap V2 池子：开盘前攒下的 80% BNB + 每份付费 400 枚进池，LP 打入黑洞。</p>
+              <p>开盘价下胜方一份约值下注额 2 倍。开盘前赢的奖励先记账，开盘后一键领取；败方没发的 90% 销毁。</p>
             </div>
             <div class="x-panel">
-              <h3><span class="x-num">06</span>第 2 期起</h3>
-              <p>上一期胜方角色守擂，对战随机挑战者。</p>
-              <p><b>用 BNB 押：</b>80% 当场回购 $DUEL 进奖励池，20% 进金库，败方每份领 666.6 枚。</p>
-              <p><b>用 $DUEL 押：</b>一份价格按提交时的池子价计算，等值 0.002 BNB 再多付 10%（即 0.0022 BNB 等值的 $DUEL），不再开局锁定。80% 进奖励池，20% 进金库，押输一枚不退。</p>
-              <p>奖励先从奖励池出，不够从储备补，剩余留给下一期。</p>
+              <h3><span class="x-num">06</span>开盘后</h3>
+              <p>上一期胜方守擂，对战随机挑战者。</p>
+              <p><b>用 BNB 押：</b>80% 当场回购 $DUEL 进奖励池，20% 进金库。</p>
+              <p><b>用 $DUEL 押：</b>一份按提交时池子价等值 0.002 BNB 再多付 10%，80% 进奖励池、20% 进金库，押输一枚不退。</p>
+              <p>发奖先从奖励池出，不够从储备补。</p>
             </div>
           </div>
         </section>
@@ -238,7 +239,7 @@
           <h2>代币</h2>
           <p class="x-sec__sub">团队零份额，全部由合约持有作储备。开盘前代币不可转让。</p>
           <div class="x-stats">
-            <div class="x-panel x-stat"><b>1,000,000,000</b><span>$DUEL 总量</span></div>
+            <div class="x-panel x-stat"><b>100,000,000</b><span>$DUEL 总量</span></div>
             <div class="x-panel x-stat"><b>0</b><span>团队份额</span></div>
             <div class="x-panel x-stat"><b>2%</b><span>池子买卖税，直接进金库</span></div>
             <div class="x-panel x-stat"><b>≥2.5%</b><span>卖出时滑点设置</span></div>
@@ -249,25 +250,26 @@
               <p>钱包互转、合约回购与加池免税。</p>
             </div>
             <div class="x-panel">
-              <h3>owner 权限</h3>
-              <p>只能开启新一期，动不了储备、奖励池和用户资产。</p>
+              <h3>无 owner</h3>
+              <p>合约没有管理员，开期、开奖、建池全自动，没人动得了储备、奖励池和用户资产。</p>
             </div>
           </div>
           <div class="x-panel" style="margin-top:14px">
             <h3>合约地址 · BSC 主网（chainId 56）</h3>
-            <p><span class="x-code">0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094</span></p>
+            <p><span class="x-code">0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6</span></p>
             <div class="x-row">
               <button class="x-btn" type="button" id="copyAddr2">复制</button>
-              <a class="x-btn" href="https://bscscan.com/address/0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094" target="_blank" rel="noopener">在 BscScan 查看</a>
+              <a class="x-btn" href="https://bscscan.com/address/0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6" target="_blank" rel="noopener">在 BscScan 查看</a>
             </div>
           </div>
         </section>
 
         <section class="x-sec" id="ai">
           <h2>AI 一键参与</h2>
-          <p class="x-sec__sub">选阵营和份数，复制提示词交给你的 Agent。</p>
+          <p class="x-sec__sub">选方式、阵营和份数，复制提示词交给你的币安 AI 钱包。</p>
           <div class="x-panel">
-            <div class="x-tabs" role="group" aria-label="支付方式">
+            <div class="x-tabs" role="group" aria-label="参与方式">
+              <button class="x-btn" type="button" id="payFree" aria-pressed="false">免费 1 次</button>
               <button class="x-btn" type="button" id="payBnb" aria-pressed="true">用 BNB 押</button>
               <button class="x-btn" type="button" id="payTok" aria-pressed="false">用 $DUEL 押</button>
             </div>
@@ -286,34 +288,34 @@
           </div>
           <div class="x-grid" style="margin-top:14px">
             <div class="x-panel">
-              <h3>结束本期（卖满或截止后）</h3>
+              <h3>推进 / 开奖</h3>
               <pre class="x-prompt" id="pOpen"></pre>
-              <button class="x-btn" type="button" data-copy="pOpen" id="openBtn" disabled>复制</button>
-              <p class="x-msg" id="openMsg" aria-live="polite">合计卖满 1,000 份，或第一笔下单起满 12 小时后可用。</p>
+              <button class="x-btn" type="button" data-copy="pOpen">复制</button>
+              <p class="x-msg">平时不用管，下单会自动结束到期的局并开奖。</p>
             </div>
             <div class="x-panel">
-              <h3>领取（开奖后）</h3>
+              <h3>一键领取（开盘后）</h3>
               <pre class="x-prompt" id="pClaim"></pre>
-              <button class="x-btn" type="button" data-copy="pClaim">复制</button>
+              <button class="x-btn" type="button" data-copy="pClaim" id="claimBtn">复制</button>
+              <p class="x-msg" id="claimMsg" aria-live="polite"></p>
             </div>
           </div>
         </section>
 
         <section class="x-sec" id="me">
           <h2>查我的战绩</h2>
-          <p class="x-sec__sub">输入 BSC 地址，读取链上份数和可领数量。</p>
+          <p class="x-sec__sub">输入 BSC 地址，读取本期份数、免费资格和全部可领数量。</p>
           <div class="x-panel">
             <form class="x-row" id="userForm">
               <input class="x-input" id="addr" aria-label="BSC 地址" placeholder="0x…" autocomplete="off" spellcheck="false" />
               <button class="x-btn" type="submit">查询</button>
             </form>
             <dl class="x-kv" id="userOut" hidden>
-              <div><dt>阵营 1 份数</dt><dd id="uA">-</dd></div>
-              <div><dt>阵营 2 份数</dt><dd id="uB">-</dd></div>
-              <div><dt>剩余可买份数</dt><dd id="uLeft">-</dd></div>
+              <div><dt>本期阵营 1</dt><dd id="uA">-</dd></div>
+              <div><dt>本期阵营 2</dt><dd id="uB">-</dd></div>
               <div><dt>持有 Agent ID</dt><dd id="uAgent">-</dd></div>
-              <div><dt>可领取 $DUEL</dt><dd id="uClaim">-</dd></div>
-              <div><dt>已领取</dt><dd id="uClaimed">-</dd></div>
+              <div><dt>免费机会</dt><dd id="uFree">-</dd></div>
+              <div><dt>累计可领 $DUEL</dt><dd id="uClaim">-</dd></div>
             </dl>
             <p class="x-msg" id="userMsg" aria-live="polite"></p>
           </div>
@@ -322,15 +324,15 @@
         <section class="x-sec" id="draw">
           <h2>开奖记录</h2>
           <div class="x-panel" id="drawBox" aria-live="polite">
-            <p class="x-blink">等待本期结束后第一个比特币区块</p>
+            <p class="x-blink">等待第 1 期开奖</p>
           </div>
         </section>
       </main>
       <footer class="x-foot">
         <div class="x-row">
-          <span>合约地址：<span class="x-code" id="cAddr">0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094</span></span>
+          <span>合约地址：<span class="x-code" id="cAddr">0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6</span></span>
           <button class="x-btn" type="button" id="copyAddr">复制</button>
-          <a class="x-btn" id="scanLink" href="https://bscscan.com/address/0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094" target="_blank" rel="noopener">BscScan</a>
+          <a class="x-btn" id="scanLink" href="https://bscscan.com/address/0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6" target="_blank" rel="noopener">BscScan</a>
         </div>
         <p>本站不构成投资建议。</p>
       </footer>
@@ -338,340 +340,237 @@
 
     <script src="hark.js"></script>
     <script>
-      const CONTRACT = "0x7F760CB1a1EEaF251b80BcEe75d74E988e37C094"; // BSC 主网，chainId 56
-      const CHAIN_ID = 56;
+      const CONTRACT = "0x03E1d6CA33A95273f0d33cD1EA55B7983e7e53e6"; // KofDuelV3，BSC 主网
       const RPCS = ["https://bsc-dataseed.bnbchain.org", "https://bsc-rpc.publicnode.com", "https://bsc.drpc.org"];
-
       (function () {
-        const CAP = 1000;
+        const LAUNCH = 10000, ROUND_TRADES = 100;
         let side = 1, n = 1, pay = "bnb", tokPrice = "";
         const FIGHTERS = ["雷拳·岚", "霜刃·机", "雷鸣·迅", "冰凰·雪", "铁拳·岩", "疾风·岚", "暗影·魅", "金刚·霸", "赤龙·焰", "银狼·牙", "星辰·曜", "鬼面·冥"];
         const fname = (i) => FIGHTERS[i] || "角色 " + i;
         const NAMES = { 1: "阵营 1 · 雷拳·岚", 2: "阵营 2 · 霜刃·机" };
-        const SHORT = { 1: "1", 2: "2" };
         const pad = (v) => BigInt(v).toString(16).padStart(64, "0");
         const $ = (id) => document.getElementById(id);
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const fmt = (n) => Number(n).toLocaleString("en-US");
-        const C = CONTRACT || "<合约地址>";
+        const fmt = (v) => Number(v).toLocaleString("en-US");
+        const C = CONTRACT;
 
-        /* ---------- JSON-RPC ---------- */
-        let rpcIdx = 0;
-        const rpcCool = [];
-        async function ethCall(data) {
-          let err;
-          const now = Date.now();
-          // 从上次成功的节点开始；被限流（429）或出错的节点冷却一段时间再用
+        let rpcIdx = 0; const rpcCool = [];
+        async function rpc(method, params) {
+          let err; const now = Date.now();
           const order = RPCS.map((_, i) => (rpcIdx + i) % RPCS.length).filter((i) => (rpcCool[i] || 0) <= now);
           if (!order.length) throw new Error("RPC 冷却中");
           for (const i of order) {
-            const url = RPCS[i];
-            const ctl = new AbortController();
-            const to = setTimeout(() => ctl.abort(), 8000);
+            const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 8000);
             try {
-              const r = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_call", params: [{ to: CONTRACT, data }, "latest"] }),
-                signal: ctl.signal,
-              });
+              const r = await fetch(RPCS[i], { method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }), signal: ctl.signal });
               if (r.status === 429) { rpcCool[i] = Date.now() + 120000; err = new Error("429"); continue; }
               const j = await r.json();
-              if (j.result && j.result.length > 2) { rpcIdx = i; return j.result; }
-              err = new Error(j.error ? j.error.message : "空返回");
-              rpcCool[i] = Date.now() + 30000;
-            } catch (e) { err = e; rpcCool[i] = Date.now() + 30000; }
-            finally { clearTimeout(to); }
+              if (j.result !== undefined && j.result !== null && j.result !== "0x") { rpcIdx = i; return j.result; }
+              err = new Error(j.error ? j.error.message : "空返回"); rpcCool[i] = Date.now() + 30000;
+            } catch (e) { err = e; rpcCool[i] = Date.now() + 30000; } finally { clearTimeout(to); }
           }
           throw err || new Error("RPC 全部失败");
         }
-        function words(hex) {
-          hex = hex.replace(/^0x/, "");
-          const w = [];
-          for (let i = 0; i + 64 <= hex.length; i += 64) w.push(hex.slice(i, i + 64));
-          return w;
-        }
+        const ethCall = (data) => rpc("eth_call", [{ to: CONTRACT, data }, "latest"]);
+        function words(hex) { hex = hex.replace(/^0x/, ""); const w = []; for (let i = 0; i + 64 <= hex.length; i += 64) w.push(hex.slice(i, i + 64)); return w; }
         const U = (w) => BigInt("0x" + w);
         function units18(bi) {
-          const base = 10n ** 18n;
-          const whole = bi / base;
-          let frac = (bi % base).toString().padStart(18, "0").slice(0, 4).replace(/0+$/, "");
+          const base = 10n ** 18n; const whole = bi / base;
+          let frac = (bi % base).toString().padStart(18, "0").slice(0, 2).replace(/0+$/, "");
           return whole.toLocaleString("en-US") + (frac ? "." + frac : "");
         }
-        function decodeState(hex) {
-          const w = words(hex);
-          if (w.length < 14) throw new Error("getState 返回长度不对");
-          return {
-            id: Number(U(w[0])), startTime: Number(U(w[1])), deadline: Number(U(w[2])),
-            a: Number(U(w[3])), b: Number(U(w[4])),
-            opened: U(w[5]) !== 0n, openedAt: Number(U(w[6])),
-            winner: Number(U(w[7])), hash: "0x" + w[8],
-            f1: Number(U(w[9])), f2: Number(U(w[10])),
-            pool: U(w[11]), reserve: U(w[12]), pair: "0x" + w[13].slice(24),
-          };
+        const wan = (bi) => (Number(bi / 10n ** 14n) / 1e8).toLocaleString("en-US", { maximumFractionDigits: 2 });
+        function decodeRound(w, o) {
+          const g = (k) => U(w[o + k]);
+          return { start: Number(g(0)), deadline: Number(g(1)), closedAt: Number(g(2)), drawBlock: Number(g(3)),
+            f1: Number(g(4)), f2: Number(g(5)), fightersSet: g(6) !== 0n, winner: Number(g(7)), closed: g(8) !== 0n,
+            trades: Number(g(9)), paid1: Number(g(10)), paid2: Number(g(11)), free1: Number(g(12)), free2: Number(g(13)),
+            tok1: Number(g(14)), tok2: Number(g(15)), seed: "0x" + w[o + 16] };
         }
-        function wan(bi) {
-          const v = Number(bi / 10n ** 14n) / 1e4; // 枚
-          return (v / 1e4).toLocaleString("en-US", { maximumFractionDigits: 2 });
+        function decodeState(hex) {
+          const w = words(hex); if (w.length < 24) throw new Error("getState 返回长度不对");
+          const r = decodeRound(w, 1);
+          return { id: Number(U(w[0])), ...r, a: r.paid1 + r.free1, b: r.paid2 + r.free2,
+            settleNext: Number(U(w[18])), total: Number(U(w[19])), launched: U(w[20]) !== 0n,
+            pool: U(w[21]), reserve: U(w[22]), pair: "0x" + w[23].slice(24) };
         }
         function setFighter(slot, idx, sideNo) {
-          const art = idx === 0 ? "a" : "b";
-          const label = `阵营 ${sideNo} ${fname(idx)}`;
-          $(slot).querySelectorAll("img").forEach((im) => {
-            const on = im.dataset.art === art;
-            im.hidden = !on; im.alt = on ? label : "";
-          });
+          const art = idx % 2 === 0 ? "a" : "b";
+          $(slot).querySelectorAll("img").forEach((im) => { const on = im.dataset.art === art; im.hidden = !on; im.alt = on ? `阵营 ${sideNo} ${fname(idx)}` : ""; });
         }
         let lastKey = "";
-        function applyEpoch(s) {
-          NAMES[1] = "阵营 1 · " + fname(s.f1);
-          NAMES[2] = "阵营 2 · " + fname(s.f2);
+        function applyRound(s) {
+          NAMES[1] = "阵营 1 · " + (s.fightersSet ? fname(s.f1) : (s.id ? "擂主" : fname(0)));
+          NAMES[2] = "阵营 2 · " + (s.fightersSet ? fname(s.f2) : (s.id ? "挑战者" : fname(1)));
           $("epoch").textContent = `第 ${s.id + 1} 期`;
-          $("poolAmt").textContent = wan(s.pool);
-          $("resAmt").textContent = wan(s.reserve);
-          const key = s.id + ":" + s.f1 + ":" + s.f2;
-          if (key === lastKey) return;
-          lastKey = key;
+          $("poolAmt").textContent = wan(s.pool); $("resAmt").textContent = wan(s.reserve);
+          $("launchAmt").textContent = s.launched ? "已开盘" : fmt(s.total);
+          const key = s.id + ":" + s.fightersSet + ":" + s.f1 + ":" + s.f2;
+          if (key === lastKey) return; lastKey = key;
           $("nameA").textContent = NAMES[1]; $("nameB").textContent = NAMES[2];
           $("tabA").textContent = NAMES[1]; $("tabB").textContent = NAMES[2];
-          setFighter("fA", s.f1, 1); setFighter("fB", s.f2, 2);
+          if (s.fightersSet) { setFighter("fA", s.f1, 1); setFighter("fB", s.f2, 2); }
           updatePrompt();
         }
-
-        /* ---------- Arena ---------- */
-        let state = null, prev = null, fightShown = false;
-        function setBar(side, shares) {
-          const pct = Math.min(shares / CAP, 1);
-          const hue = Math.round(52 - 52 * pct);
-          $("dmg" + side).style.width = pct * 100 + "%";
-          $("fill" + side).style.width = pct * 100 + "%";
-          $("fill" + side).style.backgroundColor = `hsl(${hue} 100% 50%)`;
-          $("bar" + side).setAttribute("aria-valuenow", shares);
-          $("cnt" + side).textContent = `${fmt(shares)} 份`;
+        let state = null, prev = null;
+        function setBar(sd, v, tot) {
+          const pct = tot ? Math.min(v / tot, 1) : 0, hue = Math.round(52 - 52 * pct);
+          $("dmg" + sd).style.width = pct * 100 + "%"; $("fill" + sd).style.width = pct * 100 + "%";
+          $("fill" + sd).style.backgroundColor = `hsl(${hue} 100% 50%)`;
+          $("bar" + sd).setAttribute("aria-valuenow", Math.round(pct * 100));
+          $("cnt" + sd).textContent = `${fmt(v)} 份`;
         }
-        function setSold(s) {
-          $("sold").textContent = `已售 ${fmt(s.a + s.b)} / ${fmt(CAP)}`;
-        }
-        function attack(side) {
+        function attack(sd) {
           if (reduce) return;
-          const atk = $(side === "A" ? "fA" : "fB"), def = $(side === "A" ? "fB" : "fA"), arena = $("arena");
+          const atk = $(sd === "A" ? "fA" : "fB"), def = $(sd === "A" ? "fB" : "fA"), arena = $("arena");
           atk.classList.add("x-lunge");
-          setTimeout(() => {
-            def.classList.remove("x-hit"); void def.offsetWidth; def.classList.add("x-hit");
-            arena.classList.remove("x-shake"); void arena.offsetWidth; arena.classList.add("x-shake");
-          }, 120);
+          setTimeout(() => { def.classList.remove("x-hit"); void def.offsetWidth; def.classList.add("x-hit"); arena.classList.remove("x-shake"); void arena.offsetWidth; arena.classList.add("x-shake"); }, 120);
           setTimeout(() => atk.classList.remove("x-lunge"), 320);
           setTimeout(() => { def.classList.remove("x-hit"); arena.classList.remove("x-shake"); }, 460);
         }
-        function banner(html, cls) {
-          const b = $("banner"), t = $("bannerText");
-          t.innerHTML = html; t.className = cls || ""; b.hidden = false;
+        function banner(html, cls, ms) {
+          const b = $("banner"), t = $("bannerText"); t.innerHTML = html; t.className = cls || ""; b.hidden = false;
+          if (ms) setTimeout(() => (b.hidden = true), ms);
         }
+        let lastWin = -1;
         function render(s) {
-          if (prev && prev.id !== s.id) { prev = null; fightShown = false; $("banner").hidden = true; }
-          state = s;
-          applyEpoch(s);
-          setBar("A", s.a); setBar("B", s.b); setSold(s);
-          if (prev) {
-            const upA = s.a > prev.a, upB = s.b > prev.b;
-            if (upA) attack("A");
-            if (upB) setTimeout(() => attack("B"), upA ? 520 : 0);
-          }
-          prev = { ...s };
-          const now = Date.now() / 1000;
-          if (s.winner) {
-            banner(`K.O.<small>阵营 ${SHORT[s.winner]} WIN!</small>`, "");
-          } else if (now < s.startTime) {
-            banner("READY", "x-blink");
-          } else if (!s.opened && !fightShown) {
-            fightShown = true;
-            banner("FIGHT!", "x-flash");
-            setTimeout(() => { if (!state.winner) $("banner").hidden = true; }, 1700);
-          } else if (!s.winner && $("bannerText").textContent === "READY") {
-            $("banner").hidden = true;
-          }
-          renderDraw(s);
-          tick();
+          if (prev && prev.id !== s.id) { prev = null; banner("FIGHT!", "x-flash", 1700); }
+          state = s; applyRound(s);
+          const tot = s.a + s.b; setBar("A", s.a, tot); setBar("B", s.b, tot);
+          $("sold").textContent = `本期 ${fmt(s.trades)} / ${ROUND_TRADES} 笔`;
+          if (prev) { const upA = s.a > prev.a, upB = s.b > prev.b; if (upA) attack("A"); if (upB) setTimeout(() => attack("B"), upA ? 520 : 0); }
+          prev = { ...s }; tick();
         }
-        function hms(sec) {
-          sec = Math.max(0, Math.floor(sec));
-          const p = (n) => String(n).padStart(2, "0");
-          return `${p(Math.floor(sec / 3600))}:${p(Math.floor((sec % 3600) / 60))}:${p(sec % 60)}`;
-        }
+        const ms = (sec) => { sec = Math.max(0, Math.floor(sec)); return String(Math.floor(sec / 60)).padStart(2, "0") + ":" + String(sec % 60).padStart(2, "0"); };
         function tick() {
-          const s = state; if (!s) return;
-          const now = Date.now() / 1000;
-          const full = s.a + s.b >= CAP;
-          const canClose = !s.opened && !s.winner && (full || (s.deadline !== 0 && now >= s.deadline));
-          let fig, sub, wait = false;
-          if (s.winner) { fig = "K.O."; sub = NAMES[s.winner] + " 胜"; }
-          else if (s.opened) { fig = "结束"; sub = "等待比特币区块"; }
-          else if (now < s.startTime) { fig = "--:--:--"; sub = "READY"; }
-          else if (full) { fig = "卖满"; sub = "可结束本期"; }
-          else if (s.deadline === 0) { fig = "等待第一笔下单"; sub = "下单起计时 12 小时"; wait = true; }
-          else if (now >= s.deadline) { fig = "00:00:00"; sub = "可结束本期"; }
-          else { fig = hms(s.deadline - now); sub = "距本期结束"; }
-          $("tFig").textContent = fig; $("tSub").textContent = sub;
-          $("tFig").classList.toggle("x-wait", wait);
-          $("openBtn").disabled = !canClose;
-          $("openMsg").textContent = canClose ? (full ? "已卖满 1,000 份，可结束本期。" : "12 小时已到，可结束本期。")
-            : s.opened || s.winner ? "本期已结束。" : "合计卖满 1,000 份，或第一笔下单起满 12 小时后可用。";
+          const s = state; if (!s) return; const now = Date.now() / 1000; let fig, sub, wait = false;
+          if (s.deadline === 0) { fig = "等待第一笔"; sub = "下单起计时 5 分钟"; wait = true; }
+          else if (now >= s.deadline) { fig = "00:00"; sub = "下一笔下单即结算"; }
+          else { fig = ms(s.deadline - now); sub = "距本期结束"; }
+          $("tFig").textContent = fig; $("tSub").textContent = sub; $("tFig").classList.toggle("x-wait", wait);
         }
         setInterval(tick, 1000);
 
-        function renderDraw(s) {
-          const box = $("drawBox");
-          if (!s.winner) {
-            box.innerHTML = `<p class="x-blink">等待第 ${s.id + 1} 期结束后第一个比特币区块</p>` +
-              (s.opened ? `<p>本期已结束，任何人可提交比特币区块头完成开奖。</p>` : "");
-            return;
+        /* ---------- 开奖记录 ---------- */
+        async function loadDraws(s) {
+          const last = s.settleNext - 1; const box = $("drawBox");
+          if (last < 0) { box.innerHTML = `<p class="x-blink">等待第 1 期开奖（结束后第 5 个 BSC 区块）</p>`; return; }
+          if (last === lastWin) return; lastWin = last;
+          const rows = [];
+          for (let id = last; id >= Math.max(0, last - 4); id--) {
+            try {
+              const r = decodeRound(words(await ethCall("0x8f1327c0" + pad(id))), 0);
+              rows.push(`<p>第 ${id + 1} 期 · ${r.trades} 笔 · 胜方 <b>阵营 ${r.winner} ${fname(r.winner === 1 ? r.f1 : r.f2)}</b> · 第 ${fmt(r.drawBlock)} 块 <a class="x-link" href="https://bscscan.com/block/${r.drawBlock}" target="_blank" rel="noopener">查看</a></p>`);
+              if (id === last) banner(`K.O.<small>第 ${id + 1} 期 阵营 ${r.winner} WIN!</small>`, "x-flash", 1800);
+            } catch (e) {}
           }
-          const h = s.hash.replace(/^0x/, "");
-          box.innerHTML = `<h3>第 ${s.id + 1} 期胜者：${NAMES[s.winner]}</h3>
-            <p>比特币区块哈希：<span class="x-code">${s.hash}</span></p>
-            <p>最后一位「${h.slice(-1)}」为${s.winner === 1 ? "单 → 阵营 1 胜" : "双 → 阵营 2 胜"}。</p>
-            <p><a class="x-link" href="https://mempool.space/block/${h}" target="_blank" rel="noopener">在 mempool.space 查看区块</a></p>`;
+          box.innerHTML = rows.join("") || `<p>读取中…</p>`;
         }
 
         /* ---------- Live / Demo ---------- */
-        // 默认读链上；只有在还没读到过任何数据、且所有 RPC 连续两轮都失败时才切到演示模式
-        let isDemo = false, live = false, fails = 0, pollT = 0, priceT = 0;
+        let isDemo = false, live = false, fails = 0, pollT = 0;
         async function poll() {
           if (isDemo) return;
-          try { render(decodeState(await ethCall("0x1865c57d"))); live = true; fails = 0; }
-          catch (e) {
-            fails++;
-            if (!live && fails >= 2) startDemo();
-            else $("tSub").textContent = "RPC 重试中";
-          }
+          try { const s = decodeState(await ethCall("0x1865c57d")); render(s); live = true; fails = 0; loadDraws(s); if (s.launched) pollPrice(); }
+          catch (e) { fails++; if (!live && fails >= 2) startDemo(); else $("tSub").textContent = "RPC 重试中"; }
         }
+        let priceAt = 0;
         async function pollPrice() {
-          if (isDemo) return;
-          try {
-            const w = words(await ethCall("0x2ee4b3fa"));
-            if (w.length) { tokPrice = units18(U(w[0])); updatePrompt(); }
-          } catch (e) {}
+          if (Date.now() - priceAt < 60000) return; priceAt = Date.now();
+          try { const w = words(await ethCall("0x2ee4b3fa")); if (w.length) { tokPrice = units18(U(w[0])); updatePrompt(); } } catch (e) {}
         }
-        poll().then(() => { if (!isDemo) pollPrice(); });
-        pollT = setInterval(poll, 10000);
-        priceT = setInterval(pollPrice, 60000);
-
+        poll(); pollT = setInterval(poll, 5000);
         function startDemo() {
-          if (isDemo) return;
-          isDemo = true;
-          clearInterval(pollT); clearInterval(priceT);
-          $("demo").hidden = false;
-          updatePrompt();
-          const now = Math.floor(Date.now() / 1000);
-          const E18 = 10n ** 18n;
-          // 第一笔下单在 4h18m 前，12 小时计时剩 07:42:15
-          const demo = { id: 1, startTime: now - (4 * 3600 + 18 * 60) - 600, deadline: now + 7 * 3600 + 42 * 60 + 15, a: 420, b: 310, opened: false, openedAt: 0, winner: 0,
-            hash: "0x" + "0".repeat(64), f1: 0, f2: 8, pool: 1200000n * E18, reserve: 980000000n * E18,
-            pair: "0x" + "0".repeat(40) };
-          render({ ...demo });
-          const rnd = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
-          const timer = setInterval(() => {
-            if (demo.opened) return;
-            if (Math.random() < 0.3) demo.a = Math.min(CAP - demo.b, demo.a + rnd(1, 5));
-            if (Math.random() < 0.3) demo.b = Math.min(CAP - demo.a, demo.b + rnd(1, 5));
-            if (demo.a + demo.b >= CAP) {
-              demo.opened = true; demo.openedAt = Math.floor(Date.now() / 1000);
-              clearInterval(timer);
-              setTimeout(() => {
-                let h = "00000000000000000002";
-                while (h.length < 64) h += "0123456789abcdef"[rnd(0, 15)];
-                demo.hash = "0x" + h;
-                demo.winner = parseInt(h.slice(-1), 16) % 2 ? 1 : 2;
-                render({ ...demo });
-              }, 8000);
-            }
-            render({ ...demo });
-          }, 3000);
+          if (isDemo) return; isDemo = true; clearInterval(pollT); $("demo").hidden = false;
+          const now = Math.floor(Date.now() / 1000), E18 = 10n ** 18n;
+          const demo = { id: 3, start: now - 90, deadline: now + 210, closedAt: 0, drawBlock: 0, f1: 0, f2: 8, fightersSet: true, winner: 0, closed: false,
+            trades: 41, paid1: 30, paid2: 22, free1: 3, free2: 2, tok1: 0, tok2: 0, seed: "0x", settleNext: 3, total: 341, launched: false,
+            pool: 0n, reserve: 99000000n * E18, pair: "0x" };
+          demo.a = demo.paid1 + demo.free1; demo.b = demo.paid2 + demo.free2; render({ ...demo });
+          setInterval(() => { if (Math.random() < .5) { Math.random() < .5 ? demo.a++ : demo.b++; demo.trades++; demo.total++; }
+            if (demo.trades >= 100 || Date.now() / 1000 >= demo.deadline) { demo.id++; demo.trades = 0; demo.a = demo.b = 0; demo.deadline = Math.floor(Date.now() / 1000) + 300; }
+            render({ ...demo }); }, 2500);
         }
 
         /* ---------- Prompts ---------- */
+        const preview = (value, cd) => `baw contract-call preview --binanceChainId 56 --to ${C} --value ${value} --inputData ${cd} --json
+确认无风险后 baw contract-call execute --requestId <REQUEST_ID> --json`;
         function mintText() {
+          if (pay === "free") {
+            const cd = "0xc87c089c" + pad(side);
+            return `帮我在 BSC 上免费参与 KOF DUEL（每个钱包终身 1 次，1 份，奖励减半）：调用合约 ${C} 的 freeMint(uint8 side)，side=${side}（1=${NAMES[1]}，2=${NAMES[2]}），value 0。我持有 .ai Agent ID。
+${preview(0, cd)}`;
+          }
           if (pay === "tok") {
             const cd = "0xda2f98c8" + pad(side) + pad(n);
-            return `先读合约 ${C} 的 tokenPricePerShare()（selector 0x2ee4b3fa）看每份要多少 $DUEL，钱包需有 n×该数量的 $DUEL。
-调用合约 ${C} 的 mintWithToken(uint8 side, uint256 n)，side=${side}，n=${n}，value 0，calldata ${cd}。`;
+            return `开盘后可用：先读合约 ${C} 的 tokenPricePerShare()（selector 0x2ee4b3fa）看每份要多少 $DUEL，钱包需有 ${n}×该数量的 $DUEL。
+调用 mintWithToken(uint8 side, uint256 n)，side=${side}，n=${n}，value 0。
+${preview(0, cd)}`;
           }
-          const value = (n * 2 / 1000).toString();
-          const calldata = "0xf26748e2" + pad(side) + pad(n);
+          const value = (n * 2 / 1000).toString(); const cd = "0xf26748e2" + pad(side) + pad(n);
           return `帮我在 BSC 上参与 KOF DUEL：调用合约 ${C} 的 mint(uint8 side, uint256 n)，side=${side}（1=${NAMES[1]}，2=${NAMES[2]}），n=${n}，value=${value} BNB。我持有 .ai Agent ID。
-baw contract-call preview --binanceChainId 56 --to ${C} --value ${value} --inputData ${calldata} --json
-确认无风险后 baw contract-call execute --requestId <REQUEST_ID> --json`;
+${preview(value, cd)}`;
+        }
+        function claimText() {
+          const last = state ? state.settleNext - 1 : -1;
+          if (last < 0) return `还没有开奖的期。开盘后调用合约 ${C} 的 claimMany(uint256[] ids) 一次领多期。`;
+          const lo = Math.max(0, last - 99), ids = []; for (let i = lo; i <= last; i++) ids.push(i);
+          const cd = "0x925489a8" + pad(32) + pad(ids.length) + ids.map(pad).join("");
+          return `帮我领取 KOF DUEL 奖励：调用合约 ${C} 的 claimMany(uint256[] ids)，ids=第 ${lo + 1}–${last + 1} 期（${lo}…${last}），value 0。
+${preview(0, cd)}`;
         }
         function updatePrompt() {
+          const launched = state && state.launched;
           $("pMint").textContent = mintText();
-          $("nOut").textContent = n + " 份";
-          $("tabA").setAttribute("aria-pressed", side === 1);
-          $("tabB").setAttribute("aria-pressed", side === 2);
-          $("payBnb").setAttribute("aria-pressed", pay === "bnb");
-          $("payTok").setAttribute("aria-pressed", pay === "tok");
+          $("nOut").textContent = (pay === "free" ? 1 : n) + " 份";
+          $("tabA").setAttribute("aria-pressed", side === 1); $("tabB").setAttribute("aria-pressed", side === 2);
+          ["Free", "Bnb", "Tok"].forEach((k) => $("pay" + k).setAttribute("aria-pressed", pay === k.toLowerCase()));
+          $("payTok").disabled = !launched;
           $("tokPrice").hidden = pay !== "tok";
-          $("tokPrice").textContent = "当前每份：" + (tokPrice ? tokPrice + " $DUEL" : isDemo ? "RPC 读取失败，暂无法显示" : "读取中…") + "（按提交时池子价，等值 0.0022 BNB）";
-          $("nMinus").disabled = n <= 1; $("nPlus").disabled = n >= 10;
-          const id = state ? state.id : 0;
-          $("pClaim").textContent = `调用合约 ${C} 的 claim(uint256 epochId)，epochId=${id}（第 ${id + 1} 期），calldata 0x379607f5${pad(id)}，value 0。`;
+          $("tokPrice").textContent = "当前每份：" + (tokPrice ? tokPrice + " $DUEL" : "开盘后显示") + "（按提交时池子价，等值 0.0022 BNB）";
+          $("nMinus").disabled = pay === "free" || n <= 1; $("nPlus").disabled = pay === "free" || n >= 1000;
+          $("pClaim").textContent = claimText();
+          $("claimBtn").disabled = !launched;
+          $("claimMsg").textContent = launched ? "" : `开盘（累计 10,000 笔）后才能领，奖励已在链上记账。`;
         }
+        $("payFree").onclick = () => { pay = "free"; updatePrompt(); };
         $("payBnb").onclick = () => { pay = "bnb"; updatePrompt(); };
-        $("payTok").onclick = () => { pay = "tok"; updatePrompt(); };
+        $("payTok").onclick = () => { if (state && state.launched) { pay = "tok"; updatePrompt(); } };
         $("tabA").onclick = () => { side = 1; updatePrompt(); };
         $("tabB").onclick = () => { side = 2; updatePrompt(); };
-        $("nMinus").onclick = () => { n = Math.max(1, n - 1); updatePrompt(); };
-        $("nPlus").onclick = () => { n = Math.min(10, n + 1); updatePrompt(); };
-        $("pOpen").textContent = `调用合约 ${C} 的 closeEpoch()，calldata 0xcdd5f2c8，value 0。`;
+        $("nMinus").onclick = () => { n = Math.max(1, n - (n > 10 ? 10 : 1)); updatePrompt(); };
+        $("nPlus").onclick = () => { n = Math.min(1000, n + (n >= 10 ? 10 : 1)); updatePrompt(); };
+        $("pOpen").textContent = `调用合约 ${C} 的 poke()，calldata 0x18178358，value 0。到时结束本期、开奖已到区块的期。`;
         updatePrompt();
 
         function copy(text, btn) {
           if (!btn.dataset.label) btn.dataset.label = btn.textContent;
-          const show = (t) => {
-            btn.textContent = t;
-            btn.setAttribute("aria-pressed", "true");
-            clearTimeout(btn._t);
-            btn._t = setTimeout(() => { btn.textContent = btn.dataset.label; btn.removeAttribute("aria-pressed"); }, 1600);
-          };
-          const fallback = () => {
-            let ok = false;
-            const ta = document.createElement("textarea");
-            ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
-            document.body.appendChild(ta); ta.select();
-            try { ok = document.execCommand("copy"); } catch (e) {}
-            ta.remove();
-            show(ok ? "已复制 ✓" : "请手动复制");
-          };
-          show("复制中…");
-          try {
-            if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => show("已复制 ✓"), fallback);
-            else fallback();
-          } catch (e) { fallback(); }
+          const show = (t) => { btn.textContent = t; clearTimeout(btn._t); btn._t = setTimeout(() => (btn.textContent = btn.dataset.label), 1600); };
+          const fallback = () => { let ok = false; const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+            document.body.appendChild(ta); ta.select(); try { ok = document.execCommand("copy"); } catch (e) {} ta.remove(); show(ok ? "已复制 ✓" : "请手动复制"); };
+          try { if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => show("已复制 ✓"), fallback); else fallback(); } catch (e) { fallback(); }
         }
         document.querySelectorAll("[data-copy]").forEach((b) => (b.onclick = () => copy($(b.dataset.copy).textContent, b)));
-
-        /* ---------- Footer ---------- */
         $("copyAddr").onclick = (e) => copy(CONTRACT, e.currentTarget);
         $("copyAddr2").onclick = (e) => copy(CONTRACT, e.currentTarget);
 
-        /* ---------- getUser ---------- */
         $("userForm").onsubmit = async (e) => {
           e.preventDefault();
-          const addr = $("addr").value.trim();
-          const msg = $("userMsg");
+          const addr = $("addr").value.trim(), msg = $("userMsg");
           if (!/^0x[0-9a-fA-F]{40}$/.test(addr)) { msg.textContent = "请输入正确的 BSC 地址（0x 开头，40 位十六进制）。"; return; }
-          if (isDemo) { msg.textContent = "演示模式：RPC 读取失败，暂时无法查询，请刷新重试。"; return; }
-          if (!state) { msg.textContent = "正在读取当前期数，请稍后再试。"; return; }
-          msg.textContent = `查询第 ${state.id + 1} 期…`;
+          if (isDemo || !state) { msg.textContent = "链上数据还没读到，请稍后再试。"; return; }
+          msg.textContent = "查询中…"; const a = addr.slice(2).toLowerCase().padStart(64, "0");
           try {
-            const w = words(await ethCall("0x257664a4" + pad(state.id) + addr.slice(2).toLowerCase().padStart(64, "0")));
-            if (w.length < 6) throw new Error("返回长度不对");
-            $("uA").textContent = U(w[0]).toString() + " 份";
-            $("uB").textContent = U(w[1]).toString() + " 份";
-            $("uLeft").textContent = U(w[2]).toString() + " 份";
-            $("uAgent").textContent = U(w[3]) !== 0n ? "是" : "否";
-            $("uClaim").textContent = units18(U(w[4]));
-            $("uClaimed").textContent = U(w[5]) !== 0n ? "是" : "否";
-            $("userOut").hidden = false; msg.textContent = "";
+            const w = words(await ethCall("0x257664a4" + pad(state.id) + a));
+            $("uA").textContent = `${U(w[0])} 付费 + ${U(w[2])} 免费`;
+            $("uB").textContent = `${U(w[1])} 付费 + ${U(w[3])} 免费`;
+            $("uAgent").textContent = U(w[4]) !== 0n ? "是" : "否";
+            $("uFree").textContent = U(w[5]) !== 0n ? "还有 1 次" : "已用";
+            let sum = 0n; const last = state.settleNext - 1;
+            for (let id = Math.max(0, last - 49); id <= last; id++) sum += U(words(await ethCall("0xa0c7f71c" + pad(id) + a))[0]);
+            $("uClaim").textContent = units18(sum) + (state.launched ? "" : "（开盘后可领）");
+            $("userOut").hidden = false; msg.textContent = last > 49 ? "可领数量按最近 50 期统计。" : "";
           } catch (err) { msg.textContent = "查询失败：" + err.message; }
         };
       })();
